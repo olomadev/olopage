@@ -1,3 +1,3 @@
 # olopress
 
-Olobase based fast and simple Vue/Nuxt.js/Php blog application.
+Olobase based fast and simple Vue/Node.js/Php blog application.
