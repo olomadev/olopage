@@ -14,7 +14,7 @@ export default  {
       {
         icon: "mdi-note-edit-outline",
         text: t("menu.posts"),
-        link: "/posts",
+        link: "/posts?sortBy=createdAt&sortDesc=false",
       },
       // { divider: true },
       {

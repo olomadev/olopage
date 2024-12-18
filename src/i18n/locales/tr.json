@@ -96,19 +96,6 @@
     "tokenExpired": "Oturumunuzun süresi doldu lütfen tekrar giriş yapın",
     "backToLogin": "Giriş Sayfasına Geri Dön"
   },
-  "demo": {
-    "active": "Durum",
-    "currencyId": "Para Birimi",
-    "date": "Tarih",
-    "file": "Dosya",
-    "number": "Numara",
-    "currencies": "Para Birimleri",
-    "rating": "Rating",
-    "richtext": "Zengin Metin",
-    "grades": "Dereceler",
-    "amount": "Amount",
-    "text": "Text"
-  },
   "search": {
     "q" : "Ara"
   },
@@ -177,6 +164,18 @@
         "q": "Ara",
         "name" : "Kategori Adı",
         "parentId" : "Üst Kategori"
+      }
+    },
+    "posts": {
+      "fields": {
+        "q" : "Ara",
+        "title" : "Başlık",
+        "authorId" : "Yazar",
+        "categories" : "Kategoriler",
+        "tags" : "Etiketler",
+        "published" : "Yayın",
+        "createdAt" : "Oluşturulma",
+        "Actions" : "İşlemler"
       }
     },
     "roles": {

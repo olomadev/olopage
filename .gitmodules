@@ -2,3 +2,7 @@
 	path = packages/admin
 	url = git@github.com:olomadev/olobase-admin.git
 	branch = 2.x
+[submodule "backend"]
+	path = backend
+	url = git@github.com:olomadev/olopress-backend.git
+	branch = 1.x

@@ -163,6 +163,18 @@
         "parentId" : "Parent Category"
       }
     },
+    "posts": {
+      "fields": {
+        "q" : "Search",
+        "title" : "Title",
+        "authorId" : "Author",
+        "categories" : "Categories",
+        "tags" : "Tags",
+        "published" : "Published",
+        "createdAt" : "CreatedAt",
+        "Actions" : "Actions"
+      }
+    },
     "roles": {
       "rolePermissions" : "Role Permissions",
       "addPermissionButton" : "Add Permission",

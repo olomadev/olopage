@@ -37,7 +37,6 @@ export default {
   //   // console.error(confirmObject);
   // },
   data: () => ({
-    dialog: false,
     confirm: null,
     title: null,
     message: null,
