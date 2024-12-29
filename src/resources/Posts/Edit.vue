@@ -1,5 +1,9 @@
 <template>
-  <va-edit-layout :title="title">
+  <va-edit-layout 
+    :title="title" 
+    disable-card
+    disable-title
+  >
     <posts-form :id="id" :item="item"></posts-form>
   </va-edit-layout>
 </template>

@@ -1,7 +1,7 @@
 <template>
   <div v-if="disableCard">
     <div class="d-flex align-center mb-2">
-      <h1 class="h1">
+      <h1 class="h1" v-if="!disableTitle">
         {{ title }}
       </h1>
       <v-spacer></v-spacer>
@@ -15,7 +15,7 @@
     <v-card variant="flat" :border="border">
       <v-card-text>
         <div class="d-flex align-center mb-2">
-          <h1 class="h1 mb-1">
+          <h1 class="h1 mb-1" v-if="!disableTitle">
             {{ title }}
           </h1>
           <v-spacer></v-spacer>
@@ -40,6 +40,7 @@ export default {
   props: {
     border: Boolean,
     disableCard: Boolean,
+    disableTitle: Boolean,
   }
 };
 </script>

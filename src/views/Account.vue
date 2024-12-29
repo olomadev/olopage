@@ -62,7 +62,6 @@
                   variant="outlined"
                   :error-messages="themeColorErrors"
                 ></va-color-picker-input>
-
               </v-col>
             </v-row>
             <v-btn color="primary" :loading="accountUpdating" type="submit">

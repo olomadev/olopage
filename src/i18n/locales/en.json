@@ -164,9 +164,11 @@
       }
     },
     "posts": {
+      "publish-title": "Publish",
       "fields": {
         "q" : "Search",
         "title" : "Title",
+        "permalink" : "Permalink",
         "authorId" : "Author",
         "categories" : "Categories",
         "tags" : "Tags",

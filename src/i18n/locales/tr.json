@@ -167,9 +167,11 @@
       }
     },
     "posts": {
+      "publish-title": "Yayın",
       "fields": {
         "q" : "Ara",
         "title" : "Başlık",
+        "permalink" : "Kalıcı Url",
         "authorId" : "Yazar",
         "categories" : "Kategoriler",
         "tags" : "Etiketler",
