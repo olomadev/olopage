@@ -1,7 +1,7 @@
 <template>
   <v-row no-gutters class="mb-2">
     <v-col cols="12" md="8" lg="9" sm="12">
-      <v-card flat border min-height="600">
+      <v-card flat border height="100%" min-height="600" class="d-flex flex-column">
         <v-card-title class="mt-3 d-flex">
           <v-spacer></v-spacer>
           <v-menu>
@@ -36,8 +36,8 @@
           ></BlockEditor>
         </v-card-text>
         <template v-slot:actions>
-          <v-row align="center" justify="center">
-            <a style="text-decoration: underline;font-size: 14px;color:gray;" href="javascript:void(0)">{{ getFrontEndUrl }}/{{ model.permalink }}</a>
+          <v-row align="center" justify="center" v-if="model.permalink">
+            <a style="text-decoration: underline;font-size: 14px;color:gray;" href="javascript:void(0)">{{ getFrontEndUrl }}{{ model.permalink }}</a>
           </v-row>
         </template>
       </v-card>
@@ -55,7 +55,7 @@
           <v-btn v-else flat prepend-icon="mdi-publish">
             Publish
           </v-btn>
-          <v-btn class="mt-2" flat block prepend-icon="mdi-content-save" color="secondary">
+          <v-btn class="mt-2" @click="save" flat block prepend-icon="mdi-content-save" color="secondary">
             {{ $t('va.actions.save') }}
           </v-btn>
           <v-row no-gutters class="mt-5" v-if="!isNewPost">
@@ -93,17 +93,22 @@
       </v-card>
     </v-col>
   </v-row>
-  <v-dialog v-model="editPermalinkDialog" width="auto">
+  <v-dialog v-model="editPermalinkDialog" width="auto" :fullscreen="smAndDown">
     <v-card
-      max-width="400"
-      prepend-icon="mdi-update"
-      text="Your application will relaunch automatically after the update is complete."
-      title="Update in progress"
+      :min-width="smAndDown ? 300 : 600"
     >
+      <v-card-title class="text-h5"> {{ $t('resources.posts.permalink-dialog-title') }} </v-card-title>
+      <v-card-text>
+        <v-text-field
+          density="compact"
+          :prefix="getFrontEndUrl"
+          v-model="model.permalink"
+        ></v-text-field>
+      </v-card-text>
       <template v-slot:actions>
         <v-btn
           class="ms-auto"
-          text="Ok"
+          :text="$t('va.actions.save')"
           @click="editPermalinkDialog = false"
         ></v-btn>
       </template>
@@ -126,9 +131,6 @@ import { vMaska } from "maska/vue"
 export default {
   props: ["id", "item"],
   mixins: [utils],
-  inject: {
-    formState: { default: undefined },
-  },
   directives: { maska: vMaska },
   components: {
     BlockEditor,
@@ -206,12 +208,19 @@ export default {
       model: {
         permalink: {
           required,
-          maxLength: maxLength(255),
+        },
+        contentHtml: {
+          required,
         },
       },
     }
   },
   watch: {
+    "model.permalink"(val) {
+      if (this.editPermalinkDialog) {
+        this.model.permalink = this.setPermalink(val)
+      }
+    },
     "model.contentJson"(val) {
       if (Array.isArray(val) 
         && val[0]
@@ -220,35 +229,18 @@ export default {
         && val[0]["type"] == "heading"
         && val[0]["content"][0]
         && val[0]["content"][0]["text"]) {
-          this.model.permalink = slugify(val[0]["content"][0]["text"], {
-            replacement: '-',  // replace spaces with replacement character, defaults to `-`
-            remove: undefined, // remove characters that match regex, defaults to `undefined`
-            lower: true,      // convert to lower case, defaults to `false`
-            strict: false,     // strip special characters except replacement, defaults to `false`
-            locale: Trans.currentLocale, // language code of the locale to use
-            trim: true         // trim leading and trailing replacement chars, defaults to `true`
-          });
+          this.model.permalink = this.setPermalink(val[0]["content"][0]["text"])
       } else {
         this.model.permalink = null;
       }
     }
   },
   computed: {
-    getFrontEndUrl() {
-      return import.meta.env.VITE_FRONTEND_URL
-    },
     isNewPost() {
       return this.$router.currentRoute.value.path == "/posts/create" ? true : false;
     },
-    permalinkErrors() {
-      const errors = [];
-      const field = "permalink";
-      if (!this.v$["model"][field].$dirty) return errors;
-      this.v$["model"][field].required.$invalid &&
-        errors.push(this.$t("v.text.required"));
-      this.v$["model"][field].maxLength.$invalid &&
-        errors.push(this.$t("v.string.maxLength", { max: "255" }));
-      return errors;
+    getFrontEndUrl() {
+      return import.meta.env.VITE_FRONTEND_URL + "/"
     },
   },
   created() {
@@ -266,14 +258,43 @@ export default {
     });
   },
   methods: {
-    setHtmlContent(contentHtml) {
-      this.model.contentHtml = contentHtml;
+    setPermalink(url) {
+      if (Object.prototype.toString.call(url) === "[object String]") {
+        return slugify(url, {
+          replacement: '-',  // replace spaces with replacement character, defaults to `-`
+          remove: undefined, // remove characters that match regex, defaults to `undefined`
+          lower: true,      // convert to lower case, defaults to `false`
+          strict: false,     // strip special characters except replacement, defaults to `false`
+          locale: Trans.currentLocale, // language code of the locale to use
+          trim: true         // trim leading and trailing replacement chars, defaults to `true`
+        });
+      }
+    },
+    setHtmlContent(html) {
+      this.model.contentHtml = html;
     },
     menuItemClick(item, key) {
-      console.error(`Item clicked: ${item.title}, Index: ${key}`);
+      switch (key) {
+        case 'save':
+          this.save();
+          break;
+        case 'edit-permalink':
+          this.editPermalinkDialog = true;  
+          break;
+      }
     },
     save() {
-      console.error(this.model.contentHtml);
+      const Self = this;
+      this.loading = false;
+      if (this.model.contentHtml == '<p></p><p></p>') {
+        Self.$admin.message('warning', 'Your page content cannot be empty.')
+        return;
+      }
+      if (! this.model.permalink) {
+        Self.$admin.message('warning', 'The first element of your page must be the heading and not left blank.')
+        return;
+      }
+      // console.error(this.model.contentHtml);
     }
   }
 }

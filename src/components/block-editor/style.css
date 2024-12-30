@@ -8,6 +8,7 @@
 .blockeditor {
   h1 {
     @apply text-3xl;
+    line-height: 48px;
   }
   h2 {
     @apply text-2xl;
@@ -19,9 +20,7 @@
 .blockeditor ol, ul {
   @apply text-lg;
 }
-.blockeditor ol, ul > li { 
-  line-height: 22px;
-}
+
 .blockeditor p, [data-variant="large"] {
   @apply text-lg;
 }
@@ -206,7 +205,7 @@
     border-radius: 0.5rem;
     color: #fff;
     font-family: 'JetBrainsMono', monospace;
-    margin: 1.5rem 0;
+    margin: 0;
     padding: 0.75rem 1rem;
     code {
       background: none;

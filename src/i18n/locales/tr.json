@@ -171,6 +171,7 @@
     "posts": {
       "actions": "İşlemler",
       "permalink": "Kalıcı Url",
+      "permalink-dialog-title": "Kalıcı Url Güncelle",
       "categories": "Kategoriler",
       "fields": {
         "q" : "Ara",

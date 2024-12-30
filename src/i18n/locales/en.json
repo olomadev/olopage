@@ -168,6 +168,7 @@
     "posts": {
       "actions": "Actions",
       "permalink": "Permalink",
+      "permalink-dialog-title": "Edit Permalink",
       "categories": "Categories",
       "fields": {
         "q" : "Search",

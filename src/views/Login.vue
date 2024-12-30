@@ -21,7 +21,7 @@
         <v-sheet color="white">
           <v-container>
             <div class="text-center mt-9 mb-6">
-              <div style="letter-spacing: 1px;font-size:34px;height:70px;" class="text-primary">Olopress</div>
+              <div style="letter-spacing: 1px;font-size:34px;height:70px;" class="text-primary">Olopage</div>
             </div>
             <v-form @submit.prevent="validate">
               <v-text-field
