@@ -1,65 +1,118 @@
 <template>
-  <va-form 
-    :id="id" 
-    :item="item" 
-    v-model="model"
-  >
-    <v-row no-gutters class="mb-5">
-      <v-col cols="12" md="8" lg="9" sm="12">
-        <v-card flat>
-          <v-card-text>
-            <BlockEditor editorClass="my-16 prose xl:prose-xl text-slate-600 max-w-none"
-              v-model="content"
-              :editable="editable"
-              mode="json"
-              :blockTools="blockTools"
-              :blockWidthTypes="[
-                'horizontalRule',
-                'blockquote',
-                'youtube',
-              ]"
-            ></BlockEditor>
-          </v-card-text>
-        </v-card>
-      </v-col>
-<!-- 
-      <v-col cols="12" md="8" lg="9" sm="12">
-        <v-card flat>
-          <v-card-text>
-            <va-text-input
-              source="permalink"
-              v-model="model.permalink"
-              :error-messages="permalinkErrors"
-              variant="outlined"
-            ></va-text-input>
-          </v-card-text>
-        </v-card>
-      </v-col>
- -->
-      <v-col cols="4" md="4" lg="3">
-        <v-card flat class="mt-sm-5 ml-lg-5 ml-md-5" :title="$t('resources.posts.publish-title')">
-          <v-card-text>
-              <va-boolean-input
-                v-model="publishStatus"
-                label="Published"
-                hide-details
-              ></va-boolean-input>
+  <v-row no-gutters class="mb-2">
+    <v-col cols="12" md="8" lg="9" sm="12">
+      <v-card flat border min-height="600">
+        <v-card-title class="mt-3 d-flex">
+          <v-spacer></v-spacer>
+          <v-menu>
+            <template v-slot:activator="{ props }">
+              <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props"></v-btn>
+            </template>
+            <v-list elevation="2">
+              <v-list-item
+                v-for="(item, index) in menuItems"
+                :key="index"
+                :value="index"
+                @click="menuItemClick(item, item.value)"
+              >
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-card-title>
+        <v-card-text>
+          <BlockEditor 
+            editorClass="my-12 prose xl:prose-xl text-slate-600 max-w-none"
+            v-model="model.contentJson"
+            :editable="editable"
+            mode="json"
+            :blockTools="blockTools"
+            :blockWidthTypes="[
+              'horizontalRule',
+              'blockquote',
+              'youtube',
+            ]"
+            @updateHtmlContent="setHtmlContent"
+          ></BlockEditor>
+        </v-card-text>
+        <template v-slot:actions>
+          <v-row align="center" justify="center">
+            <a style="text-decoration: underline;font-size: 14px;color:gray;" href="javascript:void(0)">{{ getFrontEndUrl }}/{{ model.permalink }}</a>
+          </v-row>
+        </template>
+      </v-card>
+    </v-col>
+    <v-col cols="12" md="4" lg="3" sm="12">
+      <v-card flat 
+        class="ml-lg-5 ml-md-5" 
+        :style="smAndDown ? 'margin-top: 20px;' : ''" 
+        border
+      >
+        <v-card-text>
+          <v-btn v-if="publishStatus" flat prepend-icon="mdi-publish-off" color="red-darken-2">
+            UnPublish
+          </v-btn>
+          <v-btn v-else flat prepend-icon="mdi-publish">
+            Publish
+          </v-btn>
+          <v-btn class="mt-2" flat block prepend-icon="mdi-content-save" color="secondary">
+            {{ $t('va.actions.save') }}
+          </v-btn>
+          <v-row no-gutters class="mt-5" v-if="!isNewPost">
+            <v-col>
+              <va-date-input 
+                source="publishedAt" 
+                label="Published on" 
+                format="shortFormat"
+              ></va-date-input>
+            </v-col>
+            <v-col>
+              <va-text-input 
+                class="ml-5 maska"
+                source="publishedTime"
+                v-maska="'##:##'"
+              >
+              </va-text-input>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+      <v-card flat 
+        class="mt-5 ml-lg-5 ml-md-5" 
+        :style="smAndDown ? 'margin-top: 20px;' : ''" 
+        :subtitle="$t('resources.posts.categories')"
+        border
+      >
+        <v-card-text>
+          <v-row no-gutters>
+            <v-col cols="12">  
 
-<!--             <va-select-input
-              source="published"
-              reference="roles"
-              clearable
-            ></va-select-input>   -->
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-
-    <va-save-button></va-save-button>
-  </va-form>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-col>
+  </v-row>
+  <v-dialog v-model="editPermalinkDialog" width="auto">
+    <v-card
+      max-width="400"
+      prepend-icon="mdi-update"
+      text="Your application will relaunch automatically after the update is complete."
+      title="Update in progress"
+    >
+      <template v-slot:actions>
+        <v-btn
+          class="ms-auto"
+          text="Ok"
+          @click="editPermalinkDialog = false"
+        ></v-btn>
+      </template>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
+import { useDisplay } from "vuetify";
 import { useVuelidate } from "@vuelidate/core";
 import BlockEditor from "@/components/block-editor/BlockEditor.vue";
 import { required, maxLength, numeric } from "@vuelidate/validators";
@@ -68,30 +121,58 @@ import { provide } from 'vue'
 import slugify from "slugify"
 import Trans from "@/i18n/translation";
 import sampleContent from "@/content.json";
+import { vMaska } from "maska/vue"
 
 export default {
   props: ["id", "item"],
   mixins: [utils],
+  inject: {
+    formState: { default: undefined },
+  },
+  directives: { maska: vMaska },
   components: {
     BlockEditor,
   },
   setup() {
     let vuelidate = useVuelidate();
+    const { smAndDown } = useDisplay();
     provide('v$', vuelidate)
-    return { v$: vuelidate }
+    return { v$: vuelidate, smAndDown }
   },
   data() {
     return {
+      editPermalinkDialog: false,
+      menuItems: [
+        {
+          title: 'Save (Ctrl + S)',
+          value: 'save',
+        },
+        {
+          title: 'Duplicate',
+          value: 'duplicate',
+        },
+        {
+          title: 'Copy Link',
+          value: 'copy-link',
+        },
+        {
+          title: 'Edit Permalink',
+          value: 'edit-permalink',
+        },
+      ],
       editable: true,
-      publishStatus: 1,
-      editPermalink: false,
+      publishStatus: 0,
       model: {
         id: null,
         title: null,
         permalink: null,
         categories: null,
+        contentJson: sampleContent,
+        contentHtml: null,
         tags: null,
         published: null,
+        publishedAt: null,
+        publishedTime: null,
       },
       blockTools: [
         {
@@ -118,7 +199,6 @@ export default {
           ],
         },
       ],
-      content: sampleContent,
     };
   },
   validations() {
@@ -131,39 +211,35 @@ export default {
       },
     }
   },
-  // watch: {
-  //   "model.title"(val){
-  //     this.model.permalink = slugify(this.model.title, {
-  //       replacement: '-',  // replace spaces with replacement character, defaults to `-`
-  //       remove: undefined, // remove characters that match regex, defaults to `undefined`
-  //       lower: true,      // convert to lower case, defaults to `false`
-  //       strict: false,     // strip special characters except replacement, defaults to `false`
-  //       locale: Trans.currentLocale, // language code of the locale to use
-  //       trim: true         // trim leading and trailing replacement chars, defaults to `true`
-  //     });
-  //   }
-  // },
+  watch: {
+    "model.contentJson"(val) {
+      if (Array.isArray(val) 
+        && val[0]
+        && val[0]["content"]
+        && val[0]["type"]
+        && val[0]["type"] == "heading"
+        && val[0]["content"][0]
+        && val[0]["content"][0]["text"]) {
+          this.model.permalink = slugify(val[0]["content"][0]["text"], {
+            replacement: '-',  // replace spaces with replacement character, defaults to `-`
+            remove: undefined, // remove characters that match regex, defaults to `undefined`
+            lower: true,      // convert to lower case, defaults to `false`
+            strict: false,     // strip special characters except replacement, defaults to `false`
+            locale: Trans.currentLocale, // language code of the locale to use
+            trim: true         // trim leading and trailing replacement chars, defaults to `true`
+          });
+      } else {
+        this.model.permalink = null;
+      }
+    }
+  },
   computed: {
-    // headers() {
-    //   return [
-    //     {
-    //       key: "moduleName",
-    //       sortable: false,
-    //     },
-    //     {
-    //       key: "action",
-    //       sortable: false,
-    //     },
-    //     {
-    //       key: "route",
-    //       sortable: false,
-    //     },
-    //     {
-    //       key: "method",
-    //       sortable: false,
-    //     },
-    //   ];
-    // },
+    getFrontEndUrl() {
+      return import.meta.env.VITE_FRONTEND_URL
+    },
+    isNewPost() {
+      return this.$router.currentRoute.value.path == "/posts/create" ? true : false;
+    },
     permalinkErrors() {
       const errors = [];
       const field = "permalink";
@@ -178,11 +254,27 @@ export default {
   created() {
     this.model.id = this.generateId(this);
   },
+  mounted() {
+    //
+    // Ctrl + S save support
+    // 
+    document.addEventListener('keydown', e => {
+      if (e.ctrlKey && e.key === 's') { // Prevent the Save dialog to open
+        e.preventDefault();
+        this.save();
+      }
+    });
+  },
   methods: {
-    showPermalinkInput() {
-      this.editPermalink = true;
+    setHtmlContent(contentHtml) {
+      this.model.contentHtml = contentHtml;
+    },
+    menuItemClick(item, key) {
+      console.error(`Item clicked: ${item.title}, Index: ${key}`);
+    },
+    save() {
+      console.error(this.model.contentHtml);
     }
-
   }
 }
 </script>

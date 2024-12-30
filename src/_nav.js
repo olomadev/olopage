@@ -16,36 +16,44 @@ export default  {
         text: t("menu.posts"),
         link: "/posts?sortBy=createdAt&sortDesc=false",
       },
-      // { divider: true },
-      {
-        icon: "mdi-account-multiple",
-        text: t("menu.roles"),
-        link: "/roles",
-      },
-      {
-        icon: "mdi-account-lock",
-        text: t("menu.permissions"),
-        link: "/permissions",
-      },
-      {
-        icon: "mdi-account-edit",
-        text: t("menu.users"),
-        link: "/users?sortBy=firstname&sortDesc=false",
-      },
       {
         icon: "mdi-file-tree-outline",
         text: t("menu.categories"),
         link: "/categories",
       },
       {
-        icon: "mdi-account-alert",
-        text: t("menu.failedlogins"),
-        link: "/failedlogins?sortBy=attemptedAt&sortDesc=false",
+        icon: "mdi-account-edit",
+        text: t("menu.users"),
+        link: "/users?sortBy=firstname&sortDesc=false",
+      },
+      // { divider: true },
+      {
+        icon: "mdi-shield-outline",
+        text: t("menu.security"),
+        children: [
+          {
+            text: t("menu.failedlogins"),
+            link: "/failedlogins?sortBy=attemptedAt&sortDesc=false",
+          },
+          {
+            text: t("menu.api"),
+            link: "/swagger",
+          },
+        ]
       },
       {
-        icon: "mdi-api",
-        text: t("menu.api"),
-        link: "/swagger",
+        icon: "mdi-account-lock",
+        text: t("menu.authorization"),
+        children: [
+          {
+            text: t("menu.roles"),
+            link: "/roles",
+          },
+          {
+            text: t("menu.permissions"),
+            link: "/permissions",
+          }
+        ]
       },
     ]; // end array
 

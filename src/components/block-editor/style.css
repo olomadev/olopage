@@ -177,9 +177,9 @@
   border-radius: 0.5rem;*/
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+/*  gap: 0.5rem;
   margin: 1rem 0;
-  padding: 0.5rem;
+  padding: 0.5rem;*/
   width: fit-content;
   > *:not(figcaption) {
     margin: 0;
@@ -192,7 +192,7 @@
     font-size: 12px;
     border-radius: 0.5rem;
     color: gray;
-    padding: 0.5rem;
+    padding: 0.1rem;
     text-align: center;
     width: 100%;
   }

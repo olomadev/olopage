@@ -14,7 +14,7 @@
         >
           <template v-slot:navbar-logo>
             <div class="text-center mt-12 mb-5 mr-6" style="font-family:'HankenGrotesk-Regular', 'Hanken Grotesk';font-size:24px; font-weight: bold;">
-              Olopress
+              Olopage
             </div>
           </template>
           
@@ -198,12 +198,7 @@ export default {
       ];
     },
     getFooterMenu() {
-      return [
-        {
-          href: "https://olopress.oloma.dev/",
-          text: this.$t("menu.footer-link"),
-        },
-      ]
+      return []
     }
   },
   methods: {

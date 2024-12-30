@@ -525,11 +525,6 @@ export default {
           defaultLanguage: 'javascript',
           // languageClassPrefix: 'language-',
         }),
-        // CodeBlockLowlight.configure({
-        //   lowlight,
-        //   defaultLanguage: 'js',
-        //   languageClassPrefix: 'language-',
-        // }),
         TrailingNode,
         InsertBetween,
         Subscript,
@@ -593,6 +588,7 @@ export default {
             ? this.editor.getJSON().content
             : this.editor.getHTML()
         );
+        this.$emit("updateHtmlContent", this.editor.getHTML());
       },
       onSelectionUpdate: () => {
         this.updateToolbar();

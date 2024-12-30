@@ -123,10 +123,12 @@
     "home": "Home",
     "posts": "Posts",
     "categories": "Categories",
+    "users": "Users",
+    "authorization": "Authorization",
+    "roles": "Roles",
     "permissions": "Permissions",
     "failedlogins": "Failed Logins",
-    "users": "Users",
-    "roles": "Roles",
+    "security": "Security",
     "login": "Login",
     "profile": "Profile",
     "dashboard": "Dashboard",
@@ -164,7 +166,9 @@
       }
     },
     "posts": {
-      "publish-title": "Publish",
+      "actions": "Actions",
+      "permalink": "Permalink",
+      "categories": "Categories",
       "fields": {
         "q" : "Search",
         "title" : "Title",

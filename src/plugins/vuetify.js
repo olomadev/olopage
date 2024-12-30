@@ -33,7 +33,6 @@ const defaultTheme = {
     // warning: '#FB8C00',
   },
 };
-
 // Vuetify 
 export default createVuetify({
   components: {
