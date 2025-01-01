@@ -39,7 +39,7 @@ export default {
       dashboard: "dashboard",
       downloadUrl: "/files/findOneById/",
       readFileUrl: "/files/readOneById/",
-      title: "demo",
+      title: "olopage",
       routes,
       locales: { en, tr },
       dataProvider: jsonServerDataProvider(http),

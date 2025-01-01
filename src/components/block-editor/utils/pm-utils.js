@@ -116,7 +116,7 @@ export const DragNode = function ({
   let draggedNode = state.doc.resolve(draggedNodePosition).node(1);
   let targetNode = targetResolved.node(1) ?? targetResolved.nodeAfter;
 
-  // Get document; children; start and end – always the same!
+  // Get document; children; start and end –always the same!
   const parent = targetResolved.node(0);
   const parentPos = targetResolved.start(0);
   let tr = view.state.tr;

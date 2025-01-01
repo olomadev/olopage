@@ -4,7 +4,7 @@
     "tr": "Türkçe"
   },
   "titles": {
-    "demo": "Demo",
+    "olopage": "Olopage",
     "home": "Home",
     "login": "Login",
     "posts": "Posts",
@@ -167,6 +167,8 @@
     },
     "posts": {
       "actions": "Actions",
+      "publish": "Publish",
+      "unpublish": "UnPublish",
       "permalink": "Permalink",
       "permalink-dialog-title": "Edit Permalink",
       "categories": "Categories",

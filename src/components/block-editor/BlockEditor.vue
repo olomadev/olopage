@@ -318,14 +318,14 @@
             />
             <menu-dropdown-button
               ref="uploadImage"
-              :content="uploadImageIcon + 'Upload Image'"
-              label="Upload Image"
+              :content="uploadImageIcon + 'Base64 Image'"
+              label="Base64 Image"
               @click="triggerFileUpload"
             />            
             <menu-dropdown-button
               ref="insertImage"
-              :content="imageIcon + 'Add Link Image'"
-              label="Add Link Image"
+              :content="imageIcon + 'Link Image'"
+              label="Link Image"
               @click="addLinkImage"
             />
           </template>

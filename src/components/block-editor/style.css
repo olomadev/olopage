@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+.blockeditor hr {
+  border-top-width: 6px;
+}
 .blockeditor .code-block-content {
   font-size: 14px;
 }
@@ -17,10 +20,9 @@
     @apply text-1xl;
   }
 }
-.blockeditor ol, ul {
+.blockeditor ol, ul:not(.snackbar-errors) {
   @apply text-lg;
 }
-
 .blockeditor p, [data-variant="large"] {
   @apply text-lg;
 }

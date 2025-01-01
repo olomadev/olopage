@@ -4,7 +4,7 @@
     "tr": "Türkçe"
   },
   "titles": {
-    "demo": "Demo",
+    "olopage": "Olopage",
     "home": "Anasayfa",
     "login": "Giriş",
     "posts": "Yazılar",
@@ -170,6 +170,8 @@
     },
     "posts": {
       "actions": "İşlemler",
+      "publish": "Yayınla",
+      "unpublish": "Yayından kaldır",
       "permalink": "Kalıcı Url",
       "permalink-dialog-title": "Kalıcı Url Güncelle",
       "categories": "Kategoriler",

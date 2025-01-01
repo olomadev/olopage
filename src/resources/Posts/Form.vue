@@ -1,18 +1,17 @@
 <template>
   <v-row no-gutters class="mb-2">
     <v-col cols="12" md="8" lg="9" sm="12">
-      <v-card flat border height="100%" min-height="600" class="d-flex flex-column">
+      <v-card :loading="loading" flat border height="100%" min-height="600" class="d-flex flex-column">
         <v-card-title class="mt-3 d-flex">
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-menu>
             <template v-slot:activator="{ props }">
-              <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props"></v-btn>
+              <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props" />
             </template>
             <v-list elevation="2">
               <v-list-item
                 v-for="(item, index) in menuItems"
                 :key="index"
-                :value="index"
                 @click="menuItemClick(item, item.value)"
               >
                 <v-list-item-title>{{ item.title }}</v-list-item-title>
@@ -22,157 +21,140 @@
         </v-card-title>
         <v-card-text>
           <BlockEditor 
-            editorClass="my-12 prose xl:prose-xl text-slate-600 max-w-none"
+            editorClass="py-2 prose xl:prose-xl text-slate-800 max-w-none"
             v-model="model.contentJson"
             :editable="editable"
             mode="json"
             :blockTools="blockTools"
-            :blockWidthTypes="[
-              'horizontalRule',
-              'blockquote',
-              'youtube',
-            ]"
+            :blockWidthTypes="['horizontalRule', 'blockquote', 'youtube']"
             @updateHtmlContent="setHtmlContent"
-          ></BlockEditor>
+          />
         </v-card-text>
         <template v-slot:actions>
-          <v-row align="center" justify="center" v-if="model.permalink">
-            <a style="text-decoration: underline;font-size: 14px;color:gray;" href="javascript:void(0)">{{ getFrontEndUrl }}{{ model.permalink }}</a>
+          <v-row id="posts-permalink-url" align="center" justify="center" v-if="model.permalink">
+            <a href="javascript:void(0)">{{ getFrontEndUrl }}{{ model.permalink }}</a>
           </v-row>
         </template>
       </v-card>
     </v-col>
     <v-col cols="12" md="4" lg="3" sm="12">
-      <v-card flat 
-        class="ml-lg-5 ml-md-5" 
-        :style="smAndDown ? 'margin-top: 20px;' : ''" 
-        border
-      >
-        <v-card-text>
-          <v-btn v-if="publishStatus" flat prepend-icon="mdi-publish-off" color="red-darken-2">
-            UnPublish
-          </v-btn>
-          <v-btn v-else flat prepend-icon="mdi-publish">
-            Publish
-          </v-btn>
-          <v-btn class="mt-2" @click="save" flat block prepend-icon="mdi-content-save" color="secondary">
-            {{ $t('va.actions.save') }}
-          </v-btn>
-          <v-row no-gutters class="mt-5" v-if="!isNewPost">
-            <v-col>
-              <va-date-input 
-                source="publishedAt" 
-                label="Published on" 
-                format="shortFormat"
-              ></va-date-input>
-            </v-col>
-            <v-col>
-              <va-text-input 
-                class="ml-5 maska"
-                source="publishedTime"
-                v-maska="'##:##'"
-              >
-              </va-text-input>
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
-      <v-card flat 
-        class="mt-5 ml-lg-5 ml-md-5" 
-        :style="smAndDown ? 'margin-top: 20px;' : ''" 
-        :subtitle="$t('resources.posts.categories')"
-        border
-      >
-        <v-card-text>
-          <v-row no-gutters>
-            <v-col cols="12">  
+      <div id="posts-sticky-actions">
+        <v-card flat :class="smAndDown ? 'ml-lg-5 ml-md-5 mt-2' : 'ml-lg-5 ml-md-5'" border>
+          <v-card-text>
+            <v-row no-gutters class="mb-2">
+              <v-col cols="12">
+                <v-btn block flat :prepend-icon="publishStatusIcon" :color="publishStatusColor" @click="togglePublish">
+                  {{ publishStatusText }}
+                </v-btn>
+              </v-col>
+            </v-row>
+            <v-row no-gutters class="mb-2" v-if="previewable">
+              <v-col cols="12">
+                <v-btn block flat prepend-icon="mdi-eye-outline">Preview</v-btn>
+              </v-col>
+            </v-row>
+            <v-row no-gutters class="mb-2">
+              <v-col cols="12">
+                <v-btn ref="saveButton" :loading="loading" block flat prepend-icon="mdi-content-save" color="secondary" @click="save">
+                  {{ $t('va.actions.save') }}
+                </v-btn>
+              </v-col>
+            </v-row>
+            <v-row no-gutters class="mt-5" v-if="previewable">
+              <v-col cols="6">
+                <va-date-input source="publishedAt" label="Published on" format="shortFormat" />
+              </v-col>
+              <v-col cols="6">
+                <va-text-input class="ml-5 maska" source="publishedTime" v-maska="'##:##'" />
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+        <v-card flat :class="smAndDown ? 'mt-5 ml-lg-5 ml-md-5 mt-2' : 'mt-5 ml-lg-5 ml-md-5'" border :subtitle="$t('resources.posts.categories')">
+          <v-card-text>
+            <v-row no-gutters>
+              <v-col cols="12">  
 
-            </v-col>
-          </v-row>
-        </v-card-text>
-      </v-card>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </div>
     </v-col>
   </v-row>
   <v-dialog v-model="editPermalinkDialog" width="auto" :fullscreen="smAndDown">
-    <v-card
-      :min-width="smAndDown ? 300 : 600"
-    >
-      <v-card-title class="text-h5"> {{ $t('resources.posts.permalink-dialog-title') }} </v-card-title>
+    <v-card :min-width="dialogWidth">
+      <v-card-title class="text-h5">{{ $t('resources.posts.permalink-dialog-title') }}</v-card-title>
       <v-card-text>
-        <v-text-field
-          density="compact"
-          :prefix="getFrontEndUrl"
-          v-model="model.permalink"
-        ></v-text-field>
+        <v-text-field density="compact" :prefix="getFrontEndUrl" v-model="model.permalink" />
       </v-card-text>
-      <template v-slot:actions>
-        <v-btn
-          class="ms-auto"
-          :text="$t('va.actions.save')"
-          @click="editPermalinkDialog = false"
-        ></v-btn>
-      </template>
+      <v-card-actions>
+        <v-btn class="ms-auto" text @click="editPermalinkDialog = false">{{ $t('va.actions.save') }}</v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import { useDisplay } from "vuetify";
-import { useVuelidate } from "@vuelidate/core";
-import BlockEditor from "@/components/block-editor/BlockEditor.vue";
-import { required, maxLength, numeric } from "@vuelidate/validators";
-import utils from "olobase-admin/src/mixins/utils";
-import { provide } from 'vue'
-import slugify from "slugify"
+import { provide } from 'vue';
+import { useDisplay } from 'vuetify';
+import BlockEditor from '@/components/block-editor/BlockEditor.vue';
+import Utils from 'olobase-admin/src/mixins/utils';
+import slugify from 'slugify';
 import Trans from "@/i18n/translation";
-import sampleContent from "@/content.json";
-import { vMaska } from "maska/vue"
+import { vMaska } from 'maska/vue';
 
 export default {
-  props: ["id", "item"],
-  mixins: [utils],
+  props: ['id', 'item'],
+  mixins: [Utils],
   directives: { maska: vMaska },
-  components: {
-    BlockEditor,
-  },
+  components: { BlockEditor },
   setup() {
-    let vuelidate = useVuelidate();
     const { smAndDown } = useDisplay();
-    provide('v$', vuelidate)
-    return { v$: vuelidate, smAndDown }
+    return { smAndDown };
+  },
+  async created() {
+    const Self = this
+    this.model.id = this.generateId(this);
+    this.previewable = this.$router.currentRoute.value.path === "/posts/create" ? false : true;
+    //
+    // Ctrl + S save support
+    // 
+    document.addEventListener('keydown', function(e) { 
+      if (e.ctrlKey && e.key === 's') { // Prevent the Save dialog to open
+        e.preventDefault();
+        Self.$refs.saveButton.$el.click();
+      }
+    })
   },
   data() {
     return {
+      created: false,
+      loading: false,
       editPermalinkDialog: false,
       menuItems: [
-        {
-          title: 'Save (Ctrl + S)',
-          value: 'save',
-        },
-        {
-          title: 'Duplicate',
-          value: 'duplicate',
-        },
-        {
-          title: 'Copy Link',
-          value: 'copy-link',
-        },
-        {
-          title: 'Edit Permalink',
-          value: 'edit-permalink',
-        },
+        { title: 'Duplicate', value: 'duplicate' },
+        { title: 'Copy Link', value: 'copy-link' },
+        { title: 'Edit Permalink', value: 'edit-permalink' },
+        { title: 'Delete', value: 'delete' },
       ],
       editable: true,
-      publishStatus: 0,
+      savedDrafts: [],
+      previewable: false,
       model: {
         id: null,
         title: null,
         permalink: null,
         categories: null,
-        contentJson: sampleContent,
+        contentJson: [
+          {
+            "type": "heading", "attrs": {"textAlign": "left", "level": 1 },
+            "content": [ { "type": "text", "text": "Type your title here .." } ]
+          },
+        ],
         contentHtml: null,
         tags: null,
-        published: null,
+        publishStatus: "draft",
         publishedAt: null,
         publishedTime: null,
       },
@@ -203,18 +185,6 @@ export default {
       ],
     };
   },
-  validations() {
-    return {
-      model: {
-        permalink: {
-          required,
-        },
-        contentHtml: {
-          required,
-        },
-      },
-    }
-  },
   watch: {
     "model.permalink"(val) {
       if (this.editPermalinkDialog) {
@@ -222,40 +192,36 @@ export default {
       }
     },
     "model.contentJson"(val) {
-      if (Array.isArray(val) 
-        && val[0]
-        && val[0]["content"]
-        && val[0]["type"]
-        && val[0]["type"] == "heading"
-        && val[0]["content"][0]
-        && val[0]["content"][0]["text"]) {
-          this.model.permalink = this.setPermalink(val[0]["content"][0]["text"])
+      if (
+        Array.isArray(val) &&
+        val[0]?.content &&
+        val[0]?.type === "heading" &&
+        val[0]?.content[0]?.text
+      ) {
+        const text = val[0].content[0].text;
+        this.model.title = text;
+        this.model.permalink = this.setPermalink(text);
       } else {
         this.model.permalink = null;
       }
     }
   },
   computed: {
-    isNewPost() {
-      return this.$router.currentRoute.value.path == "/posts/create" ? true : false;
+    dialogWidth() {
+      return this.smAndDown ? 300 : 600;
+    },
+    publishStatusIcon() {
+      return this.model.publishStatus === 'published' ? 'mdi-publish-off' : 'mdi-publish';
+    },
+    publishStatusColor() {
+      return this.model.publishStatus === 'published' ? 'red-darken-2' : null;
+    },
+    publishStatusText() {
+      return this.model.publishStatus === 'published' ? this.$t('resources.posts.unpublish') : this.$t('resources.posts.publish');
     },
     getFrontEndUrl() {
-      return import.meta.env.VITE_FRONTEND_URL + "/"
+      return import.meta.env.VITE_FRONTEND_URL + '/';
     },
-  },
-  created() {
-    this.model.id = this.generateId(this);
-  },
-  mounted() {
-    //
-    // Ctrl + S save support
-    // 
-    document.addEventListener('keydown', e => {
-      if (e.ctrlKey && e.key === 's') { // Prevent the Save dialog to open
-        e.preventDefault();
-        this.save();
-      }
-    });
   },
   methods: {
     setPermalink(url) {
@@ -274,28 +240,84 @@ export default {
       this.model.contentHtml = html;
     },
     menuItemClick(item, key) {
-      switch (key) {
-        case 'save':
-          this.save();
-          break;
-        case 'edit-permalink':
-          this.editPermalinkDialog = true;  
-          break;
+      if (key === 'save') this.save();
+      if (key === 'edit-permalink') this.editPermalinkDialog = true;
+    },
+    togglePublish() {
+      this.model.publishStatus = this.model.publishStatus === 'published' ? 'draft' : 'published';
+    },
+    async save() {
+      const Self = this;
+      this.loading = false
+      if (this.model.contentHtml === '<p></p><p></p>') {
+        Self.$admin.message('warning', 'Your page content cannot be empty.');
+        return;
+      }
+      if (!this.model.permalink) {
+        Self.$admin.message('warning', 'The first element of your page must be the heading and not left blank.');
+        return;
+      }
+      this.loading = "primary";
+      let response = null;
+      if (! this.previewable && ! this.savedDrafts.includes(this.model.id)) { // check record exists
+        try {
+          await this.$admin.http({ method: "GET", url: `/posts/findOneById/${this.model.id}` }).then(function(res) {
+            if (res && res?.data?.data) {
+              // res.data.data.publishedAt;
+              // Self.publishedAt = res.data.data.publishedAt;
+              // Self.publishedTime = "";  
+            }
+          });
+          await this.update();
+        } catch (error) {
+          if (error.status == 404) {
+            await this.create();
+            this.savedDrafts.push(this.model.id);
+          }
+          this.loading = false;
+        }
+      } else {
+        await this.update();
+      }
+      this.loading = false;
+    },
+    async create() {
+      try {
+        const res = await this.$admin.http({ method: "POST", url: "/posts/create", data: this.model });
+        if (res && res.status === 200) {
+          this.previewable = true;
+          // this.publishedAt = res.data.;
+          // this.publishedTime = "";
+        }
+      } catch (error) {
+        console.error("Create error:", error);
       }
     },
-    save() {
-      const Self = this;
-      this.loading = false;
-      if (this.model.contentHtml == '<p></p><p></p>') {
-        Self.$admin.message('warning', 'Your page content cannot be empty.')
-        return;
+    async update() {
+      console.error(this.model.id)
+      try {
+        const res = await this.$admin.http({ method: "PUT", url: `/posts/update/${this.model.id}`, data: this.model });
+        if (res && res.status === 200) {
+          this.previewable = true;
+        }
+      } catch (error) {
+        console.error("Update error:", error);
       }
-      if (! this.model.permalink) {
-        Self.$admin.message('warning', 'The first element of your page must be the heading and not left blank.')
-        return;
-      }
-      // console.error(this.model.contentHtml);
     }
-  }
-}
+  },
+};
 </script>
+
+<style>
+#posts-sticky-actions {
+  position: sticky; top: 0;
+}
+#posts-permalink-url {
+  padding-bottom: 45px;
+}
+#posts-permalink-url a {
+  text-decoration: underline;
+  font-size: 14px;
+  color:gray;
+}
+</style>

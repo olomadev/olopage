@@ -26,6 +26,7 @@ export default {
         },
         {
           source: "authorId",
+          type: "select",
           sortable: true,
         },
         {

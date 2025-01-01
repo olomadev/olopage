@@ -124,7 +124,7 @@ export default {
 }
 .hljs-copy-button {
   position: relative;
-  margin-top: 30px;
+  margin-top: 10px;
   margin-right: 10px;
   width: calc(16px + var(--hljs-theme-padding));
   height: calc(16px + var(--hljs-theme-padding));
@@ -133,7 +133,7 @@ export default {
   color: gray;
   border-radius: 0.25rem;
   border: 1px solid;
-  border-color: color-mix(in srgb, gray, transparent 80%);
+  border-color: color-mix(in srgb, gray, transparent 30%);
   background-color: var(--hljs-theme-background);
   transition: background-color 200ms ease;
   overflow: hidden;
@@ -154,13 +154,16 @@ export default {
 }
 .hljs-copy-button:hover {
   background-color: color-mix(in srgb, gray, transparent 90%);
+  border-color: #a8a8a8;
 }
 .hljs-copy-button:active {
   border-color: color-mix(in srgb, gray, transparent 60%);
+  border-color: #a8a8a8;
 }
 .hljs-copy-button[data-copied="true"] {
   text-indent: 0px; /* Shows the inner text */
   width: auto;
+  padding: 4px;
 }
 .hljs-copy-container[data-autohide="true"] {
   transform: translateX(calc(100% + 1.125em));

@@ -86,11 +86,12 @@
           :menu="getFooterMenu"
         >
           <template v-slot:left>
-            <LanguageSwitcher></LanguageSwitcher>
+            <span style="font-size:13px">&copy; Olopage</span>
+            <!-- <LanguageSwitcher></LanguageSwitcher> -->
           </template>
-          <template v-slot:right>
+<!--           <template v-slot:right>
             <span style="font-size:13px">&copy; 2024</span>
-          </template>
+          </template> -->
         </va-footer>
       </template>
     </va-layout>
