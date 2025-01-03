@@ -10,7 +10,7 @@
         getReferenceClientRect: getTableRowMenuCoords,
       }"
     >
-      <menu-item>
+      <menu-item :coords="menuCoords">
         <menu-button
           title="Row tools"
           class="rounded-full text-slate-400 hover:text-slate-800"
@@ -19,7 +19,6 @@
 
         <template #dropdown>
           <menu-dropdown-button
-
             v-for="tool in tableRowTools"
             v-html="tool.icon + ' ' + tool.title"
             :key="tool.title"
@@ -40,7 +39,7 @@
         getReferenceClientRect: getTableColumnMenuCoords,
       }"
     >
-      <menu-item>
+      <menu-item :coords="menuCoords">
         <menu-button
           title="Column tools"
           :content="moreIconRound"
@@ -117,7 +116,7 @@
           class="py-2 md:py-2 group relative"
           v-if="!dragging && currentBlockTool"
         >
-          <menu-item>
+          <menu-item :coords="menuCoords">
             <menu-button
               @click.prevent
               :title="currentBlockTool?.name"
@@ -196,6 +195,7 @@
         v-if="!dragging"
       >
         <menu-item
+          :coords="menuCoords"
           v-for="(alignmentToolGroup, key) in activeAlignmentTools"
           :key="key"
         >
@@ -247,6 +247,7 @@
       >
         <menu-item
           align="right"
+          :coords="menuCoords"
           :key="tool.title"
           v-for="tool in allInlineTools"
         >
@@ -273,7 +274,7 @@
         v-if="editor && editor.can().deleteNode(topLevelNodeType) && !dragging"
         class="p-1 gap-0.5 md:p-2 md:gap-1 flex group flex-row items-center relative"
       >
-        <menu-item align="right">
+        <menu-item align="right" :coords="menuCoords">
           <menu-button
             @click.prevent
             :content="createIcon"
@@ -465,6 +466,7 @@ export default {
       dragging: false,
       draggedNodePosition: null,
       editor: null,
+      menuCoords: null,
       allBlockTools: mergeArrays(defaultBlockTools(), this.blockTools),
       allInlineTools: mergeArrays(defaultInlineTools(), this.inlineTools),
       allAlignmentTools: this.alignmentTools.length
@@ -733,7 +735,8 @@ export default {
       this.$refs.deleteButton.$el.blur();
     },
     getMenuCoords() {
-      return GetTopLevelBlockCoords(this.editor.view);
+      this.menuCoords = GetTopLevelBlockCoords(this.editor.view)
+      return this.menuCoords
     },
     getTableRowMenuCoords() {
       return GetTableRowCoords(this.editor.view);

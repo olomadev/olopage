@@ -79,21 +79,6 @@
       <template #aside>
         <va-aside></va-aside>
       </template>
-
-      <template #footer>
-        <va-footer 
-          :key="getCurrentLocale" 
-          :menu="getFooterMenu"
-        >
-          <template v-slot:left>
-            <span style="font-size:13px">&copy; Olopage</span>
-            <!-- <LanguageSwitcher></LanguageSwitcher> -->
-          </template>
-<!--           <template v-slot:right>
-            <span style="font-size:13px">&copy; 2024</span>
-          </template> -->
-        </va-footer>
-      </template>
     </va-layout>
   </v-app>
 </template>

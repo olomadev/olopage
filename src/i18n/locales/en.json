@@ -171,7 +171,16 @@
       "unpublish": "UnPublish",
       "permalink": "Permalink",
       "permalink-dialog-title": "Edit Permalink",
+      "tags": "Tags",
       "categories": "Categories",
+      "messages" : {
+        "postHeadingError" : "The first element of your page must be the heading and not left blank",
+        "postEmptyContentError": "Your page content cannot be empty",
+        "postCreatedSuccessfully": "New post created sucessfully",
+        "postUpdatedSuccessfully": "Post saved sucessfully",
+        "postDeletedSuccessfully": "Post deleted sucessfully",
+        "postUrlCopiedSuccessfully": "URL copied to your clipboard"
+      },
       "fields": {
         "q" : "Search",
         "title" : "Title",
@@ -179,7 +188,7 @@
         "authorId" : "Author",
         "categories" : "Categories",
         "tags" : "Tags",
-        "published" : "Published",
+        "publishStatus" : "Status",
         "createdAt" : "CreatedAt",
         "Actions" : "Actions"
       }

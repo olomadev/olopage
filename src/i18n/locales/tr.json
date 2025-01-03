@@ -174,7 +174,16 @@
       "unpublish": "Yayından kaldır",
       "permalink": "Kalıcı Url",
       "permalink-dialog-title": "Kalıcı Url Güncelle",
+      "tags": "Etiketler",
       "categories": "Kategoriler",
+      "messages" : {
+        "postHeadingError" : "Sayfanızın ilk öğesi başlık olmalı ve boş bırakılmamalıdır",
+        "postEmptyContentError": "Sayfa içeriğiniz boş olamaz",
+        "postCretedSuccessfully": "Yeni gönderi başarıyla oluşturuldu",
+        "postUpdatedSuccessfully": "Gönderi başarıyla kaydedildi",
+        "postDeletedSuccessfully": "Gönderi başarıyla silindi",
+        "postUrlCopiedSuccessfully": "Gönderi URL'si panonuza başarıyla kopyalandı"
+      },
       "fields": {
         "q" : "Ara",
         "title" : "Başlık",
@@ -182,7 +191,7 @@
         "authorId" : "Yazar",
         "categories" : "Kategoriler",
         "tags" : "Etiketler",
-        "published" : "Yayın",
+        "publishStatus" : "Durum",
         "createdAt" : "Oluşturulma",
         "Actions" : "İşlemler"
       }

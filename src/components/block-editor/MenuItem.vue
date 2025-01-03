@@ -3,8 +3,7 @@
     <slot></slot>
     <div
       v-if="hasDropdown"
-      class="bg-white shadow py-2 group-focus-within:block hidden overflow-hidden whitespace-nowrap absolute bottom-full sm:bottom-auto sm:top-full mt-4 border border-slate-400"
-      :class="align == 'left' ? 'left-0' : 'right-0'"
+      :class="getClass"
     >
       <slot name="dropdown"></slot>
     </div>
@@ -14,11 +13,35 @@
 <script>
 export default {
   computed: {
+    getClass() {
+      let classStr = "bg-white shadow py-2 group-focus-within:block hidden overflow-hidden whitespace-nowrap absolute bottom-full mt-4 border border-slate-400";
+      classStr += this.align == 'left' ? 'left-0' : 'right-0';
+      if (this.rec.top < 420) {
+        classStr += " sm:bottom-auto sm:top-full"; // show dropdown menu at the top position
+      } 
+      return classStr
+    },
     hasDropdown() {
       return !!this.$slots.dropdown;
     },
   },
+  watch: {
+    coords(val) {
+      this.rec.top = val.top; // set client rect object menu top position
+    },
+  },
+  data() {
+    return {
+      rec: {
+        top: null,
+      }
+    }
+  },
   props: {
+    coords: {
+      type: Object,
+      default: null,
+    },
     align: {
       type: String,
       default: "left",

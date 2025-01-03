@@ -68,14 +68,6 @@ export default [
     label: "name",
   },
   {
-    name: "years",
-    label: "name",
-  },
-  {
-    name: "months",
-    label: "name",
-  },
-  {
     name: "currencies",
     label: "name",
   },
