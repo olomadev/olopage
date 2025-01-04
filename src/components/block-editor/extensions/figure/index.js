@@ -62,8 +62,7 @@ export const Figure = Node.create({
           })
           .command(({ tr, commands }) => {
             const { doc, selection } = tr;
-            const position = doc.resolve(selection.to - 2).end();
-
+            const position = doc.resolve(selection.to - 1).end(); // selection.to - 2 => shows position error
             return commands.setTextSelection(position);
           })
           .run();

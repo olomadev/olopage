@@ -156,6 +156,11 @@
     "failedlogins": "Başarısız Oturumlar",
     "rest api": "REST API"
   },
+  "blockeditor": {
+    "toolbar": {
+      "transformTo" : "Buna Dönüştür"
+    }
+  },
   "resources": {
     "swagger": {
       "rest_api": "REST API Dökümanları",
@@ -182,7 +187,9 @@
         "postCretedSuccessfully": "Yeni gönderi başarıyla oluşturuldu",
         "postUpdatedSuccessfully": "Gönderi başarıyla kaydedildi",
         "postDeletedSuccessfully": "Gönderi başarıyla silindi",
-        "postUrlCopiedSuccessfully": "Gönderi URL'si panonuza başarıyla kopyalandı"
+        "postUrlCopiedSuccessfully": "Gönderi URL'si panonuza başarıyla kopyalandı",
+        "postPublished": "Gönderiniz başarıyla yayına alındı",
+        "postUnpublished": "Gönderiniz başarıyla yayından kaldırıldı"
       },
       "fields": {
         "q" : "Ara",

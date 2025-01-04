@@ -153,6 +153,11 @@
     "failedlogins": "Failed Logins",
     "rest api": "REST API"
   },
+  "blockeditor": {
+    "toolbar": {
+      "transformTo" : "Transform To"
+    }
+  },
   "resources": {
     "swagger": {
       "rest_api": "REST API Documents",
@@ -179,7 +184,9 @@
         "postCreatedSuccessfully": "New post created sucessfully",
         "postUpdatedSuccessfully": "Post saved sucessfully",
         "postDeletedSuccessfully": "Post deleted sucessfully",
-        "postUrlCopiedSuccessfully": "URL copied to your clipboard"
+        "postUrlCopiedSuccessfully": "URL copied to your clipboard",
+        "postPublished": "Your post published successfully",
+        "postUnpublished": "Your post unpublished successfully"
       },
       "fields": {
         "q" : "Search",

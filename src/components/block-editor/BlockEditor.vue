@@ -130,7 +130,7 @@
               <div
                 class="p-3 uppercase text-gray-600 text-xs pb-1 tracking-wide"
               >
-                Transform to
+                {{ i18n.global.t("blockeditor.toolbar.transformTo") }}
               </div>
               <menu-dropdown-button
                 v-for="tool in allBlockTools.filter(
@@ -271,7 +271,7 @@
       </div>
 
       <div
-        v-if="editor && editor.can().deleteNode(topLevelNodeType) && !dragging"
+        v-if="editor && currentBlockTool?.tools?.length > 1 && editor.can().deleteNode(topLevelNodeType) && !dragging"
         class="p-1 gap-0.5 md:p-2 md:gap-1 flex group flex-row items-center relative"
       >
         <menu-item align="right" :coords="menuCoords">
@@ -319,8 +319,8 @@
             />
             <menu-dropdown-button
               ref="uploadImage"
-              :content="uploadImageIcon + 'Base64 Image'"
-              label="Base64 Image"
+              :content="uploadImageIcon + 'Upload Image'"
+              label="Upload Image"
               @click="triggerFileUpload"
             />            
             <menu-dropdown-button
@@ -360,6 +360,9 @@
 </template>
 
 <script>
+import slugify from 'slugify';
+import i18n from "@/i18n";
+import Trans from "@/i18n/translation";
 import MenuButton from "@/components/block-editor/MenuButton.vue"
 import MenuItem from "@/components//block-editor/MenuItem.vue"
 import MenuDropdownButton from "@/components//block-editor/MenuDropdownButton.vue"
@@ -403,10 +406,17 @@ import defaultBlockTools from "./tools/block-tools";
 import defaultInlineTools from "./tools/inline-tools";
 import defaultAlignmentTools from "./tools/alignment-tools";
 import { tableRowTools, tableColumnTools } from "./tools/table-tools";
+import config from "@/_config"
 
 export default {
+  setup() {
+    return { i18n };
+  },
   props: {
     modelValue: {},
+    admin: {
+      type: Object,
+    },
     editable: {
       default: true,
     },
@@ -513,6 +523,7 @@ export default {
     window.removeEventListener("mousemove", () => this.cancelTyping());
   },
   mounted() {
+    const Self = this
     this.editor = new Editor({
       extensions: [
         StarterKit.configure({
@@ -656,13 +667,22 @@ export default {
       if (file) {
         const reader = new FileReader();
         reader.onload = async () => {
+          const maxSize = 2 * 1024 * 1024; // 2 MB (byte cinsinden)
+          if (file.size > maxSize) {
+            this.admin.message()
+            return
+          }
           const base64 = await this.startImageProcess(reader.result);
-          const caption = window.prompt('caption')
-          this.editor
+          const uploadedfileName = await this.uploadFileToServer(file, base64);
+          if (uploadedfileName) {
+            const caption = window.prompt('caption')
+            const fileUrl = import.meta.env.VITE_API_URL + '/files/display?fileName=' + uploadedfileName;
+            this.editor
             .chain()
             .focus()
-            .setFigure({ src: base64, caption: caption })
-            .run();
+            .setFigure({ src: fileUrl, caption: caption })
+            .run()
+          }
         };
         reader.readAsDataURL(file);
       }
@@ -706,6 +726,27 @@ export default {
       });
       return resizedBase64;
     },
+    async uploadFileToServer(file, base64) {
+      const fileName = slugify(file.name, {
+        replacement: config.slugify.replacement,  // replace spaces with replacement character, defaults to `-`
+        remove: config.slugify.remove, // remove characters that match regex, defaults to `undefined`
+        lower: config.slugify.lower,   // convert to lower case, defaults to `false`
+        strict: config.slugify.strict,  // strip special characters except replacement, defaults to `false`
+        locale: config.slugify.locale, // language code of the locale to use
+        trim: config.slugify.trim, // trim leading and trailing replacement chars, defaults to `true`
+      });
+      const res = await this.admin.http(
+        { 
+          method: "POST", 
+          url: "/files/create", 
+          data: { fileName: fileName, fileType: file.type, fileSize: (file.size / 1024).toFixed(2), fileData: base64 },
+        }
+      );
+      if (res && res.status === 200 && res?.data?.data['fileName']) {
+        return res.data.data.fileName
+      }
+      return false;
+    },
     calcImageSize(image) {
       let y = 1;
       if (image.endsWith('==')) {
@@ -730,8 +771,32 @@ export default {
           tool.tools?.find((tool) => tool.name == this.topLevelNodeType)
       );
     },
-    deleteNode(node) {
+    async deleteNode(node) {
+      const oldFigures = []
+      const newFigures = []
+      if (node == "figure") { // image
+        this.editor.getJSON().content.forEach((node, index) => {
+          if (node.type == 'figure') {
+            oldFigures.push(node.attrs.src)
+          }
+        });
+      }
       this.editor.commands.deleteNode(node);
+      this.editor.getJSON().content.forEach((node, index) => {
+        if (node.type == 'figure') {
+          newFigures.push(node.attrs.src)
+        }
+      });
+      //
+      // check figures for delete operation
+      // 
+      oldFigures.forEach(async (src) => {
+        if (! newFigures.includes(src)) {
+          const urlObj = new URL(src);
+          const fileName = urlObj.searchParams.get("fileName");
+          await this.admin.http({ method: "DELETE", url: "/files/delete", params: { fileName: fileName }});
+        }
+      });
       this.$refs.deleteButton.$el.blur();
     },
     getMenuCoords() {
