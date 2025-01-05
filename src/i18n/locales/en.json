@@ -158,6 +158,11 @@
       "transformTo" : "Transform To"
     }
   },
+  "fileupload": {
+    "messages": {
+      "fileSizeExceeded": "Uploaded file size cannot exceed 2 mb"
+    }
+  },
   "resources": {
     "swagger": {
       "rest_api": "REST API Documents",
@@ -178,15 +183,16 @@
       "permalink-dialog-title": "Edit Permalink",
       "tags": "Tags",
       "categories": "Categories",
+      "featuredImage": "Featured Image",
       "messages" : {
+        "postPublished": "Your post published successfully",
+        "postUnpublished": "Your post unpublished successfully",
         "postHeadingError" : "The first element of your page must be the heading and not left blank",
         "postEmptyContentError": "Your page content cannot be empty",
         "postCreatedSuccessfully": "New post created sucessfully",
         "postUpdatedSuccessfully": "Post saved sucessfully",
         "postDeletedSuccessfully": "Post deleted sucessfully",
-        "postUrlCopiedSuccessfully": "URL copied to your clipboard",
-        "postPublished": "Your post published successfully",
-        "postUnpublished": "Your post unpublished successfully"
+        "postUrlCopiedSuccessfully": "URL copied to your clipboard"
       },
       "fields": {
         "q" : "Search",

@@ -26,6 +26,7 @@
           <BlockEditor 
             :key="editorKey"
             :admin="this.$admin"
+            :postId="this.model.id"
             editorClass="py-2 prose xl:prose-xl text-slate-800 max-w-none"
             v-model="model.contentJson"
             :editable="editable"
@@ -41,7 +42,7 @@
               <v-alert v-if="message.bottom" density="compact" max-height="30" class="alerts" :text="message.text" :type="message.type" :icon="false" variant="tonal" />
             </v-col>
             <v-col cols="6" class="pr-5" id="posts-permalink-url" align="right" justify="right" v-if="model.permalink">
-              <a href="javascript:void(0)">{{ getFrontEndUrl }}{{ model.permalink }}</a>
+              <a href="javascript:void(0)">{{ getFrontendBaseUrl }}/{{ model.permalink }}</a>
             </v-col>
           </v-row>
         </template>
@@ -84,18 +85,7 @@
           <v-card-text>
             <v-row no-gutters>
               <v-col cols="12">  
-                <va-select-input
-                  density="compact"
-                  v-model="model.categories"
-                  resource="posts"
-                  reference="categories"
-                  :filter="{ visibility: 'public' }"
-                  variant="filled"
-                  multiple
-                  chips
-                  closable-chips
-                >
-                </va-select-input>
+                <va-select-input density="compact" v-model="model.categories" resource="posts" reference="categories" :filter="{ visibility: 'public' }" variant="filled" multiple chips closable-chips />
               </v-col>
             </v-row>
           </v-card-text>
@@ -104,18 +94,17 @@
           <v-card-text>
             <v-row no-gutters>
               <v-col cols="12">  
-                <va-auto-complete-input
-                  density="compact"
-                  v-model="model.tags"
-                  resource="posts"
-                  reference="tags"
-                  variant="filled"
-                  multiple
-                  chips
-                  taggable
-                  closable-chips
-                >
-                </va-auto-complete-input>
+                <va-auto-complete-input density="compact" v-model="model.tags" resource="posts" reference="tags" variant="filled" multiple chips taggable closable-chips />
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+        <v-card flat :class="smAndDown ? 'mt-5 ml-lg-5 ml-md-5 mt-2' : 'mt-5 ml-lg-5 ml-md-5'" border :subtitle="$t('resources.posts.featuredImage')">
+          <v-card-text>
+            <v-row no-gutters>
+              <v-col cols="12"> 
+                <v-img rounded class="mb-2" v-if="model.featuredImageId" width="80" height="55" :src="getFeaturedImageUrl" />
+                <va-select-input density="compact" v-model="model.featuredImageId" resource="posts" reference="featured-images" variant="filled" closable-chips clearable :filter="{ postId: model.id }" />
               </v-col>
             </v-row>
           </v-card-text>
@@ -127,7 +116,7 @@
     <v-card :min-width="dialogWidth">
       <v-card-title class="text-h5">{{ $t('resources.posts.permalink-dialog-title') }}</v-card-title>
       <v-card-text>
-        <v-text-field density="compact" :prefix="getFrontEndUrl" v-model="model.permalink" />
+        <v-text-field density="compact" :prefix="getFrontendBaseUrl + '/'" v-model="model.permalink" />
       </v-card-text>
       <v-card-actions>
         <v-btn class="ms-auto" text @click="editPermalinkDialog = false">{{ $t('va.actions.save') }}</v-btn>
@@ -189,7 +178,6 @@ export default {
         id: null,
         title: null,
         permalink: null,
-        categories: [],
         contentJson: [
           {
             "type": "heading", "attrs": {"textAlign": "left", "level": 1 },
@@ -197,7 +185,9 @@ export default {
           },
         ],
         contentHtml: null,
+        categories: [],
         tags: null,
+        featuredImageId: null,
         publishStatus: "draft",
         publishedAt: null,
         publishDate: null,
@@ -225,7 +215,7 @@ export default {
       } else {
         this.model.permalink = null;
       }
-    }
+    },
   },
   methods: {
     async save() {

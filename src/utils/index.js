@@ -23,6 +23,49 @@ export const formatDate = function (format, timestamp = new Date()) {
   return format.replace(/Y|y|m|d|H|i|s|w|W/g, match => map[match]);
 }
 /**
+ * Generate uuid
+ */
+export const generateUid = function(uppercase = false) {
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    var r = (Math.random() * 16) | 0,
+      v = c == "x" ? r : (r & 0x3) | 0x8;
+    let uuid = v.toString(16);
+    return (uppercase) ? uuid.toUpperCase() : uuid;
+  });
+}
+/**
+ * Check url is valid
+ */
+export const isValidURL = function(str) {
+  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+  return !!pattern.test(str);
+}
+/**
+ * Returns to base url of backend api
+ */
+export const getApiUrl = function(suffix) {
+  const baseUrl = import.meta.env.VITE_API_URL
+  if (suffix) {
+    return baseUrl.replace(/^\/+|\/+$/g, "") + "/" + suffix.replace(/^\/+|\/+$/g, "")  
+  }
+  return baseUrl.replace(/^\/+|\/+$/g, "")
+}
+/**
+ * Returns to base url of frontent app
+ */
+export const getFrontendUrl = function(suffix) {
+  const baseUrl = import.meta.env.VITE_FRONTEND_URL
+  if (suffix) {
+    return baseUrl.replace(/^\/+|\/+$/g, "") + "/" + suffix.replace(/^\/+|\/+$/g, "")  
+  }
+  return baseUrl.replace(/^\/+|\/+$/g, "")
+}
+/**
  * Block editor default blocktools
  */
 export const blockTools = function() {

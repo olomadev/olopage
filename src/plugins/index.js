@@ -16,6 +16,7 @@ import resources from "@/resources";
 import { useHttp } from "../plugins/useHttp";
 import axios from "axios";
 import cookies from "olobase-admin/src/utils/cookies";
+import { getApiUrl } from "@/utils"
 /**
  * Get cookie constants object
  */
@@ -26,7 +27,7 @@ const pinia = createPinia();
  * Set default global http configuration
  */
 axios.defaults.timeout = 20000;
-axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+axios.defaults.baseURL = getApiUrl();
 axios.defaults.headers.common['Content-Type'] = "application/json";
 axios.defaults.headers.common['X-Client-Locale'] = i18n.global.locale.value;
 axios.interceptors.request.use(

@@ -2,6 +2,7 @@
 import slugify from 'slugify';
 import copyToClipboard from 'clipboard-copy';
 import config from "@/_config"
+import { getFrontendUrl, getApiUrl } from "@/utils"
 
 /**
  * Common methods for editor page
@@ -55,8 +56,14 @@ export default {
     publishStatusText() {
       return this.model.publishStatus === 'published' ? this.$t('resources.posts.unpublish') : this.$t('resources.posts.publish');
     },
-    getFrontEndUrl() {
-      return import.meta.env.VITE_FRONTEND_URL + '/';
+    getFrontendBaseUrl() {
+      return getFrontendUrl()
+    },
+    getFeaturedImageUrl() {
+      if (this.model?.featuredImageId['name']) {
+        return getApiUrl('/files/display?fileName=' + this.model.featuredImageId.name)  
+      }
+      return null
     },
   },
   methods: {
@@ -111,7 +118,7 @@ export default {
       }
       if (key === 'edit-permalink') this.editPermalinkDialog = true;
       if (key === 'copy-link') {
-        copyToClipboard(import.meta.env.VITE_FRONTEND_URL + '/' + this.model.permalink)
+        copyToClipboard(getFrontendUrl(this.model.permalink))
         this.showMessage("info", this.$t("resources.posts.messages.postUrlCopiedSuccessfully"))
       }
       if (key === 'delete') {

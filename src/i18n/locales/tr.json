@@ -181,15 +181,16 @@
       "permalink-dialog-title": "Kalıcı Url Güncelle",
       "tags": "Etiketler",
       "categories": "Kategoriler",
+      "featuredImage": "Öne Çıkan Resim",
       "messages" : {
+        "postPublished": "Gönderiniz başarıyla yayına alındı",
+        "postUnpublished": "Gönderiniz başarıyla yayından kaldırıldı",
         "postHeadingError" : "Sayfanızın ilk öğesi başlık olmalı ve boş bırakılmamalıdır",
         "postEmptyContentError": "Sayfa içeriğiniz boş olamaz",
         "postCretedSuccessfully": "Yeni gönderi başarıyla oluşturuldu",
         "postUpdatedSuccessfully": "Gönderi başarıyla kaydedildi",
         "postDeletedSuccessfully": "Gönderi başarıyla silindi",
-        "postUrlCopiedSuccessfully": "Gönderi URL'si panonuza başarıyla kopyalandı",
-        "postPublished": "Gönderiniz başarıyla yayına alındı",
-        "postUnpublished": "Gönderiniz başarıyla yayından kaldırıldı"
+        "postUrlCopiedSuccessfully": "Gönderi URL'si panonuza başarıyla kopyalandı"
       },
       "fields": {
         "q" : "Ara",

@@ -406,6 +406,7 @@ import defaultBlockTools from "./tools/block-tools";
 import defaultInlineTools from "./tools/inline-tools";
 import defaultAlignmentTools from "./tools/alignment-tools";
 import { tableRowTools, tableColumnTools } from "./tools/table-tools";
+import { isValidURL, getApiUrl, generateUid } from "@/utils"
 import config from "@/_config"
 
 export default {
@@ -414,6 +415,9 @@ export default {
   },
   props: {
     modelValue: {},
+    postId: {
+      type: String,
+    },
     admin: {
       type: Object,
     },
@@ -649,7 +653,7 @@ export default {
     addLinkImage() {
       const url = window.prompt('URL')
       const caption = window.prompt('caption')
-      if (this.isValidURL(url)) {
+      if (isValidURL(url)) {
         this.editor
           .chain()
           .focus()
@@ -667,16 +671,16 @@ export default {
       if (file) {
         const reader = new FileReader();
         reader.onload = async () => {
-          const maxSize = 2 * 1024 * 1024; // 2 MB (byte cinsinden)
+          const maxSize = 2 * 1024 * 1024; // 2 MB
           if (file.size > maxSize) {
-            this.admin.message()
+            this.admin.message("error", i18n.global.t("fileupload.messages.fileSizeExceeded"))
             return
           }
           const base64 = await this.startImageProcess(reader.result);
           const uploadedfileName = await this.uploadFileToServer(file, base64);
           if (uploadedfileName) {
             const caption = window.prompt('caption')
-            const fileUrl = import.meta.env.VITE_API_URL + '/files/display?fileName=' + uploadedfileName;
+            const fileUrl = getApiUrl('/files/display?fileName=' + uploadedfileName);
             this.editor
             .chain()
             .focus()
@@ -739,11 +743,18 @@ export default {
         { 
           method: "POST", 
           url: "/files/create", 
-          data: { fileName: fileName, fileType: file.type, fileSize: (file.size / 1024).toFixed(2), fileData: base64 },
+          data: { 
+            postId: this.postId,
+            fileId: generateUid(),
+            fileName: fileName, 
+            fileType: file.type,
+            fileSize: (file.size / 1024).toFixed(2),
+            fileData: base64
+          },
         }
       );
-      if (res && res.status === 200 && res?.data?.data['fileName']) {
-        return res.data.data.fileName
+      if (res && res.status === 200 && res?.data?.data['original']) {
+        return res?.data?.data.original.fileName
       }
       return false;
     },
@@ -794,7 +805,7 @@ export default {
         if (! newFigures.includes(src)) {
           const urlObj = new URL(src);
           const fileName = urlObj.searchParams.get("fileName");
-          await this.admin.http({ method: "DELETE", url: "/files/delete", params: { fileName: fileName }});
+          await this.admin.http({ method: "DELETE", url: "/files/delete", params: { postId: this.postId, fileName: fileName }});
         }
       });
       this.$refs.deleteButton.$el.blur();
@@ -850,15 +861,6 @@ export default {
     canMoveNodeUp() {
       const selectionStart = this.editor.view.state.selection.$from;
       return selectionStart.index(0) > 0;
-    },
-    isValidURL(str) {
-      var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-        '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-      return !!pattern.test(str);
     }
   },
 };
