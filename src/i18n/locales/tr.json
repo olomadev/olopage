@@ -19,40 +19,10 @@
     "reset password": "Şifremi Sıfırla",
     "rest api": "REST API"
   },
-  "v": {
-    "text": {
-      "required": "Bu alan zorunludur"
-    },
-    "email": {
-      "required": "E-posta alanı zorunludur",
-      "invalid": "Geçersiz e-posta adresi"
-    },
-    "string": {
-      "required": "Bu alan zorunludur",
-      "alpha": "Bu alan sadece alfabetik karakterler içerebilir",
-      "minLength": "Bu alan minumum {min} karakter olmalıdır",
-      "maxLength": "Bu alan maksimum {max} karakter olmalıdır"
-    },
-    "number": {
-      "required": "Bu alan zorunludur",
-      "integer": "Bu alan bir tamsayı içermelidir",
-      "numeric": "Bu alan sayısal bir değer içermelidir",
-      "decimal": "Bu alan ondalık bir sayı içermelidir"
-    },
-    "password": {
-      "required": "Şifre alanı zorunludur",
-      "sameAs": "Şifre onay alanı yeni şifre ile aynı olmalıdır"
-    },
-    "captcha": {
-      "invalid" : "Güvenlik doğrulama aşamasını geçmeniz gerekiyor"
-    }
-  },
   "form": {
     "saved" : "Başarıyla kaydedildi"
   },
-  "messages": {
-    "welcome" : "Demo uygulamasına hoşgeldiniz" 
-  },
+  "messages": {},
   "routes": {
     "home": "Home",
     "login": "Login",
@@ -190,7 +160,8 @@
         "postCretedSuccessfully": "Yeni gönderi başarıyla oluşturuldu",
         "postUpdatedSuccessfully": "Gönderi başarıyla kaydedildi",
         "postDeletedSuccessfully": "Gönderi başarıyla silindi",
-        "postUrlCopiedSuccessfully": "Gönderi URL'si panonuza başarıyla kopyalandı"
+        "postUrlCopiedSuccessfully": "Gönderi URL'si panonuza başarıyla kopyalandı",
+        "newCategoryCreatedSuccessfully": "Yeni kategori başarıyla oluşturuldu"
       },
       "fields": {
         "q" : "Ara",
@@ -299,5 +270,34 @@
         "attemptedAtEnd" : "Girişim Bit.Tarihi "
       }
     }
+  },
+  "v": {
+    "text": {
+      "required": "Bu alan zorunludur"
+    },
+    "email": {
+      "required": "E-posta alanı zorunludur",
+      "invalid": "Geçersiz e-posta adresi"
+    },
+    "string": {
+      "required": "Bu alan zorunludur",
+      "alpha": "Bu alan sadece alfabetik karakterler içerebilir",
+      "minLength": "Bu alan minumum {min} karakter olmalıdır",
+      "maxLength": "Bu alan maksimum {max} karakter olmalıdır"
+    },
+    "number": {
+      "required": "Bu alan zorunludur",
+      "integer": "Bu alan bir tamsayı içermelidir",
+      "numeric": "Bu alan sayısal bir değer içermelidir",
+      "decimal": "Bu alan ondalık bir sayı içermelidir"
+    },
+    "password": {
+      "required": "Şifre alanı zorunludur",
+      "sameAs": "Şifre onay alanı yeni şifre ile aynı olmalıdır"
+    },
+    "captcha": {
+      "invalid" : "Güvenlik doğrulama aşamasını geçmeniz gerekiyor"
+    }
   }
+
 }

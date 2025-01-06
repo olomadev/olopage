@@ -36,7 +36,7 @@
             @updateHtmlContent="setHtmlContent"
           />
         </v-card-text>
-        <template v-slot:actions>
+        <template #actions>
           <v-row class="d-flex">
             <v-col cols="6" class="pl-5">
               <v-alert v-if="message.bottom" density="compact" max-height="30" class="alerts" :text="message.text" :type="message.type" :icon="false" variant="tonal" />
@@ -85,9 +85,33 @@
           <v-card-text>
             <v-row no-gutters>
               <v-col cols="12">  
-                <va-select-input density="compact" v-model="model.categories" resource="posts" reference="categories" :filter="{ visibility: 'public' }" variant="filled" multiple chips closable-chips />
+                <va-tree-view-input :key="newCategoryKey" open-all density="compact" v-model:selected="model.categories" reference="categories" selectable :filter="{ nested: 1 }" />
               </v-col>
             </v-row>
+            <v-row no-gutters>
+              <v-col cols="12">
+                <v-btn flat :prepend-icon="showNewCategory ? 'mdi-menu-up' : 'mdi-menu-down'"@click.stop="toggleCategory" >
+                  {{ $t("resources.posts.newCategory") }}
+                </v-btn>
+              </v-col>
+            </v-row>
+            <v-expand-transition>
+              <v-sheet class="mt-2" v-if="showNewCategory">
+              <v-card flat>
+                <v-card-text>
+                  <v-row class="mt-2">
+                    <va-text-input resource="posts" v-model="newCategory.name" variant="outlined" clearable :error-messages="newCategoryNameErrors" />
+                  </v-row>
+                  <v-row class="mt-2">
+                    <va-select-input :key="newCategoryKey" resource="posts" v-model="newCategory.parentId" reference="categories" variant="outlined" clearable :error-messages="newCategoryParentIdErrors" />
+                  </v-row>
+                  <v-row class="mt-2">
+                    <v-btn :loading="loadingCategory" flat @click.stop="addNewCategory">{{ $t("va.actions.add") }}</v-btn>
+                  </v-row>
+                </v-card-text>
+              </v-card>
+              </v-sheet>
+            </v-expand-transition>
           </v-card-text>
         </v-card>
         <v-card flat :class="smAndDown ? 'mt-5 ml-lg-5 ml-md-5 mt-2' : 'mt-5 ml-lg-5 ml-md-5'" border :subtitle="$t('resources.posts.tags')">
@@ -102,7 +126,7 @@
         <v-card flat :class="smAndDown ? 'mt-5 ml-lg-5 ml-md-5 mt-2' : 'mt-5 ml-lg-5 ml-md-5'" border :subtitle="$t('resources.posts.featuredImage')">
           <v-card-text>
             <v-row no-gutters>
-              <v-col cols="12"> 
+              <v-col cols="12">
                 <v-img rounded class="mb-2" v-if="model.featuredImageId" width="80" height="55" :src="getFeaturedImageUrl" />
                 <va-select-input density="compact" v-model="model.featuredImageId" resource="posts" reference="featured-images" variant="filled" closable-chips clearable :filter="{ postId: model.id }" />
               </v-col>
@@ -131,17 +155,20 @@ import { useDisplay } from 'vuetify';
 import BlockEditor from '@/components/block-editor/BlockEditor.vue';
 import Utils from 'olobase-admin/src/mixins/utils';
 import { vMaska } from 'maska/vue';
-import Editor from "@/mixins/editor";
+import Posts from "@/mixins/posts";
 import { formatDate, blockTools } from "@/utils";
+import { useVuelidate } from "@vuelidate/core";
+import { required } from "@vuelidate/validators";
 
 export default {
   props: ['id', 'item'],
-  mixins: [Utils, Editor],
+  mixins: [Utils, Posts],
   directives: { maska: vMaska },
   components: { BlockEditor },
   setup() {
     const { smAndDown } = useDisplay();
-    return { smAndDown };
+    provide('v$', useVuelidate() )
+    return { v$: useVuelidate(), smAndDown }
   },
   created() {
     const Self = this
@@ -168,12 +195,19 @@ export default {
     return {
       loading: false,
       loadingPublish: false,
+      loadingCategory: false,
       editPermalinkDialog: false,
       editorKey: 0,
       draftId: null,
       editable: true,
       message: { show: false, type: "error", text: "" },
       previewable: false,
+      showNewCategory: false,
+      newCategoryKey: 0,
+      newCategory: {
+        name: null,
+        parentId: null,
+      },
       model: {
         id: null,
         title: null,
@@ -195,6 +229,14 @@ export default {
       },
       blockTools: blockTools(),
     };
+  },
+  validations() {
+    return {
+      newCategory: {
+        name: { required },   
+        parentId: { required }
+      }
+    }
   },
   watch: {
     "model.permalink"(val) {
@@ -284,6 +326,24 @@ export default {
       } catch (error) {
         console.error("Update error:", error);
       }
+    },
+    async addNewCategory() {
+      this.v$.newCategory.name.$touch();
+      this.v$.newCategory.parentId.$touch();
+      if (this.v$.newCategory.name.$invalid || this.v$.newCategory.parentId.$invalid) {
+        return false;
+      }
+      this.loadingCategory = "primary";
+      const data = { id: this.generateUid(), name: this.newCategory.name, parentId: this.newCategory.parentId.id,
+        lft: this.newCategory.parentId.lft, rgt: this.newCategory.parentId.rgt };
+      await this.$admin.http({ method: "POST", url: "/categories/create", data: data }).then((response) => {
+        if (response && response.status == 200) {
+          ++this.newCategoryKey;
+          this.showNewCategory = false;
+          this.showMessage("success", this.$t("resources.posts.messages.newCategoryCreatedSuccessfully"));
+        }
+      })
+      this.loadingCategory = false;
     }
   },
 };

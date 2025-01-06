@@ -24,7 +24,7 @@ export default  {
       {
         icon: "mdi-account-edit",
         text: t("menu.users"),
-        link: "/users?sortBy=firstname&sortDesc=false",
+        link: "/users?sortBy=firstname&sortDesc=false&filter={\"active\":1}",
       },
       // { divider: true },
       {

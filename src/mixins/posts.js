@@ -1,4 +1,3 @@
-
 import slugify from 'slugify';
 import copyToClipboard from 'clipboard-copy';
 import config from "@/_config"
@@ -65,6 +64,20 @@ export default {
       }
       return null
     },
+    newCategoryNameErrors() {
+      const errors = [];
+      if (!this.v$.newCategory.name.$dirty) return errors;
+      this.v$.newCategory.name.required.$invalid &&
+        errors.push(this.$t("v.text.required"));
+      return errors;
+    },
+    newCategoryParentIdErrors() {
+      const errors = [];
+      if (!this.v$.newCategory.parentId.$dirty) return errors;
+      this.v$.newCategory.parentId.required.$invalid &&
+        errors.push(this.$t("v.text.required"));
+      return errors;
+    }
   },
   methods: {
     showMessage(type, text) {
@@ -130,6 +143,9 @@ export default {
           Self.$router.push({ name: 'posts_list' })
         }
       }
+    },
+    toggleCategory() {
+      this.showNewCategory = this.showNewCategory ? false : true;
     },
     async togglePublish() {
       this.loadingPublish = "primary"

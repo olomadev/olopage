@@ -12,11 +12,6 @@
       v2.
       last revision: 30.12.2024
     */
-   /* 
-      olobase app.css 
-      v1.
-      last revision: 06.03.2024
-    */
     #app {
       width: 100%;
       height: 100%;
@@ -68,14 +63,9 @@
     .v-selection-control__input {
       font-size: 1.3rem !important;
     }
-/*    .v-list-item__prepend > .v-badge ~ .v-list-item__spacer, 
-    .v-list-item__prepend > .v-icon ~ .v-list-item__spacer, 
-    .v-list-item__prepend > .v-tooltip ~ .v-list-item__spacer {
-        width: 25px !important;
+    .v-list-item--variant-outlined {
+      border: thin solid #f1f4f8 !important; /* fixes tree-view default boder color */
     }
-    .v-list-group__items {
-      --indent-padding: calc(35px + var(--list-indent-size)) !important;
-    }*/
     .v-list .v-list-item--nav:not(:only-child) {
       margin-bottom: 0 !important; /* fixes the my account list item margin bottom problem */
     }
@@ -113,10 +103,6 @@
     /* input prepend append icon size */
     .v-input .v-icon {
       font-size: 20px !important;
-    }
-    /* global v-list icon right space width  */
-    .v-list-item__prepend > .v-icon {
-    /*        margin-inline-end: 28px !important;*/
     }
     .v-field {
       font-size: 13px !important;
@@ -211,18 +197,6 @@
     .v-list-item-title {
       font-size: 14px !important;
     }
-/*   .v-chip.v-chip--density-default {
-      font-size: 11px !important;
-      height: 20px !important;
-      padding: 7px !important;
-      margin-right: 2px;
-    }*/
-/*    .v-chip.v-chip--density-default {
-      font-size: 11px !important;
-      height: 20px !important;
-      padding: 7px !important;
-      margin-right: 2px;
-    }*/
     /* font global size: data-table grid and all cards */
     .v-container, .v-card-text {
       font-size: 13px !important;
