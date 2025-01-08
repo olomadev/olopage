@@ -654,11 +654,7 @@ export default {
       const url = window.prompt('URL')
       const caption = window.prompt('caption')
       if (isValidURL(url)) {
-        this.editor
-          .chain()
-          .focus()
-          .setFigure({ src: url, caption: caption })
-          .run()
+        this.editor.chain().focus().setFigure({ src: url, caption: caption }).run()
       } else {
         alert("Image url is not valid.");
       }
@@ -681,11 +677,8 @@ export default {
           if (uploadedfileName) {
             const caption = window.prompt('caption')
             const fileUrl = getApiUrl('/files/display?fileName=' + uploadedfileName);
-            this.editor
-            .chain()
-            .focus()
-            .setFigure({ src: fileUrl, caption: caption })
-            .run()
+            this.editor.chain().focus().setFigure({ src: fileUrl, caption: caption }).run()
+            this.$emit("uploadedImage", uploadedfileName);
           }
         };
         reader.readAsDataURL(file);
@@ -743,14 +736,7 @@ export default {
         { 
           method: "POST", 
           url: "/files/create", 
-          data: { 
-            postId: this.postId,
-            fileId: generateUid(),
-            fileName: fileName, 
-            fileType: file.type,
-            fileSize: (file.size / 1024).toFixed(2),
-            fileData: base64
-          },
+          data: { postId: this.postId, fileId: generateUid(), fileName: fileName,  fileType: file.type, fileSize: (file.size / 1024).toFixed(2), fileData: base64},
         }
       );
       if (res && res.status === 200 && res?.data?.data['original']) {
@@ -806,6 +792,7 @@ export default {
           const urlObj = new URL(src);
           const fileName = urlObj.searchParams.get("fileName");
           await this.admin.http({ method: "DELETE", url: "/files/delete", params: { postId: this.postId, fileName: fileName }});
+          this.$emit("deletedImage", fileName);
         }
       });
       this.$refs.deleteButton.$el.blur();

@@ -18,19 +18,31 @@ export default {
     }
   },
   created() {
-    const Self = this
-    document.addEventListener('keydown', function(e) { // Ctrl + S save support
+    document.addEventListener('keydown', (e) => { // Ctrl + S save support
       if (e.ctrlKey && e.key === 's') { // Prevent the Save dialog to open
         e.preventDefault();
-        Self.$nextTick(() => {  // Access After DOM Rendering
-          if (Self.$refs.saveButton && Self.$refs.saveButton.$el) {
-            Self.$refs.saveButton.$el.click();
+        this.$nextTick(() => { // Access After DOM Rendering
+          const saveButton = this.$refs?.saveButton?.$el;
+          if (saveButton) {
+            saveButton.click();
           }
         });
       }
     });
+    document.addEventListener('scroll', () => {
+      const stickyDiv = document.querySelector('#sticky-top-div');
+      if (stickyDiv) {
+        const rect = stickyDiv.getBoundingClientRect();
+        if (!this.showNewCategory && this.expandCategories && rect.top == 0) {
+          this.expandCategories = false; // close categories       
+        }  
+      }
+    });
   },
   computed: {
+    getExpandCategories() {
+      return this.expandCategories;
+    },
     getMenuItems() {
       const updatedMenuItems = this.menuItems.map(item => {
         if (item.value === 'delete' && !this.previewable) {
@@ -121,11 +133,22 @@ export default {
         });
       }
     },
+    setDescription(contentArray) {
+      for (const item of contentArray) {
+        if (item.type === "paragraph" && item.content) {
+          for (const contentItem of item.content) {
+            if (contentItem.type === "text" && contentItem.text) {
+              return contentItem.text;
+            }
+          }
+        }
+      }
+      return null;
+    },
     setHtmlContent(html) {
       this.model.contentHtml = html;
     },
     async menuItemClick(item, key) {
-      const Self = this
       if (key === 'duplicate') {
         this.$router.push({ path: "/posts/create", query: { source: this.model.id }})
       }
@@ -137,10 +160,10 @@ export default {
       if (key === 'delete') {
         const res = await this.$admin.http({ method: "DELETE", url: "/posts/delete/" + this.model.id });
         if (res && res.status === 200) {
-          setTimeout(function(){
-            Self.$admin.message("success", Self.$t("resources.posts.messages.postDeletedSuccessfully"));
+          setTimeout(() => {
+            this.$admin.message("success", this.$t("resources.posts.messages.postDeletedSuccessfully"));
           }, 200);
-          Self.$router.push({ name: 'posts_list' })
+          this.$router.push({ name: 'posts_list' })
         }
       }
     },

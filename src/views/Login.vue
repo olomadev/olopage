@@ -198,7 +198,7 @@ export default {
       this.loading = true;
       try {
         await this.$store.getModule("auth").login({ username: this.username, password: this.password });
-        this.$router.push({ name: "dashboard" });
+        this.$router.push({ name: "posts_list" });
       } catch (e) {
         this.loading = false;
       }

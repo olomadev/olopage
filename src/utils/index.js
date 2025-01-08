@@ -7,21 +7,34 @@
  * console.log(formatDate('H:i'));         // 12:34
  * console.log(formatDate('Y-W'));         // 2025-01
  */
-export const formatDate = function (format, timestamp = new Date()) {
+export const formatDate = function (format, timestamp = new Date(), locale = "en") {
   const date = timestamp instanceof Date ? timestamp : new Date(timestamp);
+  const dayOfWeek = (date.getDay() === 0) ? 7 : date.getDay();  // 0 => 7 dönüşümü yapılır (Pazar: 7)
+  const startOfYear = new Date(date.getFullYear(), 0, 1);
+  const weekNumber = Math.ceil(((date - startOfYear) / (24 * 60 * 60 * 1000) + startOfYear.getDay() + 1) / 7);
+  let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sepr', 'Oct', 'Nov', 'Dec'];
+  let days = [
+    'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+  ];
   const map = {
-      Y: date.getFullYear(),                      // 4-digit year
-      y: String(date.getFullYear()).slice(-2),    // Last 2 digits of the year
+      F: months[date.getMonth()],              // Full month name (e.g., "March")
+      j: date.getDate(),                       // Day of the month (1-31)
+      Y: date.getFullYear(),                   // 4-digit year (e.g., "2025")
       m: String(date.getMonth() + 1).padStart(2, '0'), // Month (01-12)
       d: String(date.getDate()).padStart(2, '0'), // Day (01-31)
-      H: String(date.getHours()).padStart(2, '0'), // Hour (00-23)
+      g: date.getHours() % 12 || 12,           // Hour (12-hour format, 1-12)
+      H: String(date.getHours()).padStart(2, '0'), // Hour (24-hour format, 00-23)
       i: String(date.getMinutes()).padStart(2, '0'), // Minutes (00-59)
       s: String(date.getSeconds()).padStart(2, '0'), // Seconds (00-59)
-      w: date.getDay(),                          // Day of the week (0-6, Sunday is 0)
-      W: `0${Math.ceil((date.getDate() + new Date(date.getFullYear(), 0, 1).getDay()) / 7)}`.slice(-2), // ISO Week number
+      a: date.getHours() < 12 ? 'am' : 'pm',   // AM/PM (lowercase)
+      w: dayOfWeek,                            // Day of the week (1-7, Monday is 1)
+      W: String(weekNumber).padStart(2, '0'),   // ISO Week number (01-53)
+      l: days[date.getDay()],                  // Full day name (e.g., "Monday")
+      D: days[date.getDay()].slice(0, 3),       // Abbreviated day name (e.g., "Mon")
   };
-  return format.replace(/Y|y|m|d|H|i|s|w|W/g, match => map[match]);
-}
+  return format.replace(/F|j|Y|YY|m|d|g|H|i|s|a|w|W|l|D/g, match => map[match] || match);
+};
+
 /**
  * Generate uuid
  */

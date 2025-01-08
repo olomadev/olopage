@@ -6,15 +6,15 @@ export default  {
     const adminRole = await admin.can(["admin"]);
 
     return [
-      {
-        icon: "mdi-view-dashboard-outline",
-        text: t("menu.dashboard"),
-        link: "/dashboard",
-      },
+      // {
+      //   icon: "mdi-view-dashboard-outline",
+      //   text: t("menu.dashboard"),
+      //   link: "/dashboard",
+      // },
       {
         icon: "mdi-note-edit-outline",
         text: t("menu.posts"),
-        link: "/posts?sortBy=createdAt&sortDesc=false",
+        link: "/posts",
       },
       {
         icon: "mdi-file-tree-outline",

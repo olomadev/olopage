@@ -146,12 +146,18 @@
     "posts": {
       "actions": "İşlemler",
       "publish": "Yayınla",
+      "preview": "Ön izle",
       "unpublish": "Yayından kaldır",
       "permalink": "Kalıcı Url",
       "permalink-dialog-title": "Kalıcı Url Güncelle",
       "tags": "Etiketler",
       "categories": "Kategoriler",
+      "newCategory": "Yeni Kategori",
       "featuredImage": "Öne Çıkan Resim",
+      "description": "Açıklama",
+      "published": "yayınlandı",
+      "draft": "taslak",
+      "pending": "bekliyor",
       "messages" : {
         "postPublished": "Gönderiniz başarıyla yayına alındı",
         "postUnpublished": "Gönderiniz başarıyla yayından kaldırıldı",

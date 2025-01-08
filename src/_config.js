@@ -27,10 +27,12 @@ export default {
   i18n: {
     dateFormat: "shortFormat",
     en: {
-      dateFieldDisplayFormat: "YYYY-mm-dd" // YYYY.mm.dd, YYYY\mm\dd or YYYY/mm/dd
+      dateFormat: "Y-m-d", // YYYY.mm.dd, YYYY\mm\dd or YYYY/mm/dd
+      dateTimeFormat: "Y-m-d H:i:s",
     },
     tr: {
-      dateFieldDisplayFormat: "dd-mm-YYYY"
+      dateFormat: "d-m-Y",
+      dateTimeFormat: "d-m-Y H:i:s",
     },
   },
   //

@@ -33,6 +33,8 @@
             mode="json"
             :blockTools="blockTools"
             :blockWidthTypes="['horizontalRule', 'blockquote', 'youtube']"
+            @uploadedImage="uploadedImage"
+            @deletedImage="deletedImage"
             @updateHtmlContent="setHtmlContent"
           />
         </v-card-text>
@@ -49,19 +51,19 @@
       </v-card>
     </v-col>
     <v-col cols="12" md="4" lg="3" sm="12">
-      <div id="posts-sticky-actions">
+      <div id="sticky-top-div" style="position: sticky; top: 0; z-index: 10;">
         <v-card flat :class="smAndDown ? 'ml-lg-5 ml-md-5 mt-2' : 'ml-lg-5 ml-md-5'" border>
           <v-card-text>
             <v-row no-gutters class="mb-2">
               <v-col cols="12">
-                <v-btn :loading="loadingPublish" block flat :prepend-icon="publishStatusIcon" :color="publishStatusColor" @click.stop="togglePublish">
+                <v-btn v-if="previewable" :loading="loadingPublish" block flat :prepend-icon="publishStatusIcon" :color="publishStatusColor" @click.stop="togglePublish">
                   {{ publishStatusText }}
                 </v-btn>
               </v-col>
             </v-row>
             <v-row no-gutters class="mb-2" v-if="previewable">
               <v-col cols="12">
-                <v-btn block flat prepend-icon="mdi-eye-outline">Preview</v-btn>
+                <v-btn block flat prepend-icon="mdi-eye-outline">{{ $t('resources.posts.preview') }}</v-btn>
               </v-col>
             </v-row>
             <v-row no-gutters class="mb-2">
@@ -81,11 +83,13 @@
             </v-row>
           </v-card-text>
         </v-card>
+      </div>
+      <div style="position: sticky; top: 250px; z-index: 8;">
         <v-card flat :class="smAndDown ? 'mt-5 ml-lg-5 ml-md-5 mt-2' : 'mt-5 ml-lg-5 ml-md-5'" border :subtitle="$t('resources.posts.categories')">
           <v-card-text>
             <v-row no-gutters>
               <v-col cols="12">  
-                <va-tree-view-input :key="newCategoryKey" open-all density="compact" v-model:selected="model.categories" reference="categories" selectable :filter="{ nested: 1 }" />
+                <va-tree-view-input :key="newCategoryKey" :open-all="getExpandCategories" density="compact" v-model:selected="model.categories" reference="categories" selectable :filter="{ nested: 1 }" />
               </v-col>
             </v-row>
             <v-row no-gutters>
@@ -127,8 +131,17 @@
           <v-card-text>
             <v-row no-gutters>
               <v-col cols="12">
-                <v-img rounded class="mb-2" v-if="model.featuredImageId" width="80" height="55" :src="getFeaturedImageUrl" />
-                <va-select-input density="compact" v-model="model.featuredImageId" resource="posts" reference="featured-images" variant="filled" closable-chips clearable :filter="{ postId: model.id }" />
+                <v-img rounded class="mb-2" :key="featuredImageKey" v-if="model.featuredImageId?.name" width="80" height="55" :src="getFeaturedImageUrl" />
+                <va-select-input density="compact" :key="featuredImageKey" v-model="model.featuredImageId" resource="posts" reference="featured-images" variant="filled" closable-chips clearable :filter="{ postId: model.id }" return-object />
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+        <v-card flat :class="smAndDown ? 'mt-5 ml-lg-5 ml-md-5 mt-2' : 'mt-5 ml-lg-5 ml-md-5'" border :subtitle="$t('resources.posts.description')">
+          <v-card-text>
+            <v-row no-gutters>
+              <v-col cols="12">
+                <va-text-input density="compact" v-model="model.description" multiline counter="255" variant="filled"></va-text-input>
               </v-col>
             </v-row>
           </v-card-text>
@@ -140,7 +153,7 @@
     <v-card :min-width="dialogWidth">
       <v-card-title class="text-h5">{{ $t('resources.posts.permalink-dialog-title') }}</v-card-title>
       <v-card-text>
-        <v-text-field density="compact" :prefix="getFrontendBaseUrl + '/'" v-model="model.permalink" />
+        <v-text-field density="compact" :prefix="getFrontendBaseUrl + '/'" v-model="model.permalink" counter="255" />
       </v-card-text>
       <v-card-actions>
         <v-btn class="ms-auto" text @click="editPermalinkDialog = false">{{ $t('va.actions.save') }}</v-btn>
@@ -179,8 +192,10 @@ export default {
     if (this.item) {
       this.model.tags = this.item.tags;
       this.model.categories = this.item.categories;
+      this.model.description = this.item.description;
       this.model.contentJson = this.item.contentJson;
       this.model.contentHtml = this.item.contentHtml;
+      this.model.featuredImageId = this.item.featuredImageId;
       this.model.publishStatus = this.item.publishStatus;
       this.model.publishedAt = this.item.publishedAt;
       if (this.item.publishedAt && typeof this.item.publishedAt === "string") {
@@ -198,8 +213,10 @@ export default {
       loadingCategory: false,
       editPermalinkDialog: false,
       editorKey: 0,
+      featuredImageKey: 0,
       draftId: null,
       editable: true,
+      expandCategories: true,
       message: { show: false, type: "error", text: "" },
       previewable: false,
       showNewCategory: false,
@@ -212,6 +229,7 @@ export default {
         id: null,
         title: null,
         permalink: null,
+        description: null,
         contentJson: [
           {
             "type": "heading", "attrs": {"textAlign": "left", "level": 1 },
@@ -239,6 +257,13 @@ export default {
     }
   },
   watch: {
+    showNewCategory(val) {
+      if (val) {
+        this.expandCategories = false;
+        this.v$.newCategory.name.$reset();
+        this.v$.newCategory.parentId.$reset();
+      }
+    },
     "model.permalink"(val) {
       if (this.editPermalinkDialog) {
         this.model.permalink = this.setPermalink(val)
@@ -254,8 +279,10 @@ export default {
         const text = val[0].content[0].text;
         this.model.title = text;
         this.model.permalink = this.item ? this.item.permalink : this.setPermalink(text)    
+        this.model.description = this.item ? this.item.description : this.setDescription(val)    
       } else {
         this.model.permalink = null;
+        this.model.description = null;
       }
     },
   },
@@ -344,15 +371,27 @@ export default {
         }
       })
       this.loadingCategory = false;
+    },
+    uploadedImage(fileName) {
+      const saveButton = this.$refs?.saveButton?.$el;
+      if (saveButton) {
+        saveButton.click();
+      }
+      ++this.featuredImageKey;
+    },
+    deletedImage() {
+      const saveButton = this.$refs?.saveButton?.$el;
+      if (saveButton) {
+        saveButton.click();
+      }
+      this.model.featuredImageId = null;
+      ++this.featuredImageKey;
     }
   },
 };
 </script>
 
 <style>
-#posts-sticky-actions {
-  position: sticky; top: 0;
-}
 #posts-permalink-url {
   padding-bottom: 45px;
 }
