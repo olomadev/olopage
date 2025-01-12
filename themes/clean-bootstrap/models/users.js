@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../db"; // Database connection
+import { sequelize } from "../db.js"; // Database connection
 
-export const User = sequelize.define("User", {
+export const Users = sequelize.define("users", {
   userId: {
     type: DataTypes.STRING(36), // CHAR(36) in database
     primaryKey: true, // userId is the primary key
@@ -59,6 +59,3 @@ export const User = sequelize.define("User", {
   // Optional: Control automatic date fields
   timestamps: false, // We manage createdAt and updatedAt manually
 });
-
-// Define the reverse relationship
-User.hasMany(Post, { foreignKey: 'userId' });

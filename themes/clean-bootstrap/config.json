@@ -1,0 +1,10 @@
+{
+  "name": "clean-bootstrap",
+  "version": "1.0",
+  "pages": [
+    { "path": "index", "content": "" },
+    { "path": "about", "content": "" },
+    { "path": "post", "content": "" },
+    { "path": "contact", "content": "" }
+  ]
+}

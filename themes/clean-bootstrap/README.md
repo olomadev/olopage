@@ -5,11 +5,10 @@
 ```
 themes/
 └── clean-bootstrap/
-    └── assets/
-        ├── css
-        ├── js
-        └── img
-
+    └── views/
+        ├── index.ejs
+        ├── post.ejs
+        └── contact.ejs
 ```
 
 

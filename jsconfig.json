@@ -1,4 +1,5 @@
 {
+  "theme": "clean-bootstrap",
   "compilerOptions": {
     "target": "es5",
     "module": "esnext",

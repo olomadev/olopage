@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "server": "node server.js",
+    "server": "node --trace-warnings --no-warnings themes/clean-bootstrap/server.js",
     "dev": "VITE_CJS_IGNORE_WARNING=true vite --host --mode dev",
     "build": "VITE_CJS_IGNORE_WARNING=true vite build --mode prod",
     "preview": "VITE_CJS_IGNORE_WARNING=true vite preview",
@@ -48,6 +48,7 @@
     "js-cookie": "^3.0.5",
     "lodash": "4.17.21",
     "maska": "^3.0.4",
+    "mysql2": "^3.12.0",
     "parse-domain": "^8.0.1",
     "pinia": "^2.1.7",
     "portal-vue": "^3.0.0",

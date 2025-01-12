@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../db"; // Database connection
+import { sequelize } from "../db.js"; // Database connection
 
-export const Post = sequelize.define("Post", {
+export const Posts = sequelize.define("posts", {
   postId: {
     type: DataTypes.STRING(36), // CHAR(36) in database
     primaryKey: true, // postId is the primary key
@@ -54,5 +54,3 @@ export const Post = sequelize.define("Post", {
   // Optional: Control automatic date fields
   timestamps: false, // Disable automatic management of createdAt and updatedAt
 });
-
-Post.belongsTo(User, { foreignKey: 'userId' });
