@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "server": "node --trace-warnings --no-warnings themes/clean-bootstrap/server.js",
+    "server": "node --trace-warnings --no-warnings themes/clean-blog/server.js",
     "dev": "VITE_CJS_IGNORE_WARNING=true vite --host --mode dev",
     "build": "VITE_CJS_IGNORE_WARNING=true vite build --mode prod",
     "preview": "VITE_CJS_IGNORE_WARNING=true vite preview",

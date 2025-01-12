@@ -3,6 +3,10 @@
 
 Amazing fast, simple and flexible blog application for Node.js developers.
 
+## Philosophy
+
+This application is an anti-page builder application and semi-automatic page content manager. Please hire a software developer to create better quality web pages. You don't need page builders, you need to hire developers. And we created this software for developers.
+
 ## Tech Stack
 
 <table>

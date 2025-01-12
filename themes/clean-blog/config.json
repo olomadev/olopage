@@ -1,8 +1,8 @@
 {
-  "name": "clean-bootstrap",
+  "name": "clean-blog",
   "version": "1.0",
   "pages": [
-    { "path": "index", "content": "" },
+    { "path": "index" },
     { "path": "about", "content": "" },
     { "path": "post", "content": "" },
     { "path": "contact", "content": "" }

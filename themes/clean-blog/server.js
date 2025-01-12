@@ -18,15 +18,11 @@ Users.hasMany(Posts, { foreignKey: 'authorId' });
 const app = express();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views')); // set the global views directory
-app.use(express.static('public')); // use static files
-app.use("/themes", express.static(path.join(__dirname, `themes/${config.theme}/assets`)));
+app.use("/themes", express.static(path.join(__dirname, `/themes/${config.theme}/assets`)));
+app.use(express.static(path.join(__dirname, 'public')));
 
 const themeConfigPath = `./themes/${config.theme}/config.json`;
 const themeConfig = JSON.parse(fs.readFileSync(themeConfigPath, "utf8"));
-
-// Ensure associations are set after models are loaded
-// Posts.associate({ Users });
-// Users.associate({ Posts });
 
 app.get("/", async (req, res) => {
   //
@@ -39,13 +35,21 @@ app.get("/", async (req, res) => {
       attributes: ['userId', 'email', 'firstname', 'lastname'], // Select specific user fields
     }],
   });
-
-  // console.log(posts)
-
-  res.render('index', {
-    themePath: `themes/${config.theme}`,
-  });
+  res.render('index', { themePath: `themes/${config.theme}`});
 });
+
+app.get("/about", async (req, res) => {
+  res.render('about', { themePath: `themes/${config.theme}`});
+});
+
+app.get("/contact", async (req, res) => {
+  res.render('contact', { themePath: `themes/${config.theme}`});
+});
+
+app.get("/post", async (req, res) => {
+  res.render('post', { themePath: `themes/${config.theme}`});
+});
+
 
 ViteExpress.listen(app, 3000, () =>
   console.log("Server is listening on port 3000..."),

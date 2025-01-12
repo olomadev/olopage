@@ -1,5 +1,5 @@
 {
-  "theme": "clean-bootstrap",
+  "theme": "clean-blog",
   "compilerOptions": {
     "target": "es5",
     "module": "esnext",
