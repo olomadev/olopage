@@ -15,13 +15,21 @@ themes/
         ├── posts.js
         └── users.js
     └── views/
+        └── layouts/
+            ├── partials/
+                ├── header.ejs
+                └── footer.ejs
+            └── default.ejs
+        ├── 404.ejs
         ├── about.ejs
         ├── contact.ejs
         ├── index.ejs
         └── post.ejs
+    ├── cache.js
     ├── config.js
     ├── db.js
     ├── README.md
+    ├── redis.js
     └── server.js
 ```
 
