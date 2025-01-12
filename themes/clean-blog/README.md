@@ -1,5 +1,5 @@
 
-## Clean Blog (Default Theme)
+# Clean Blog (Default Theme)
 
 Olopage starter theme.
 
@@ -9,17 +9,45 @@ themes/
     └── assets/
         ├── css
         ├── img
-        └── js
+        ├── js
+        └── favicon.ico
     └── models/
-        ├── post.js
+        ├── posts.js
         └── users.js
     └── views/
         ├── about.ejs
         ├── contact.ejs
-        ├── about.ejs
-        └── about.ejs
+        ├── index.ejs
+        └── post.ejs
     ├── config.json
     ├── db.js
     ├── README.md
     └── server.js
+```
+
+## Theme Configuration
+
+```
+{
+  "name": "clean-blog",
+  "version": "1.0",
+  "pages": [
+    { "path": "about", "content": "" },
+    { "path": "contact", "content": "" },
+    { "path": "index" },
+    { "path": "post", "content": "" }
+  ]
+}
+```
+
+## Changing Theme
+
+You can change the default theme from jsconfig.json in the project root.
+
+jsconfig.json
+
+```
+{
+  "theme": "clean-blog",
+}
 ```
