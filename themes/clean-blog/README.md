@@ -32,10 +32,10 @@ themes/
   "name": "clean-blog",
   "version": "1.0",
   "pages": [
-    { "path": "about", "content": "" },
-    { "path": "contact", "content": "" },
+    { "path": "about", "defaultContent": "" },
+    { "path": "contact", "defaultContent": "" },
     { "path": "index" },
-    { "path": "post", "content": "" }
+    { "path": "post", "defaultContent": "" }
   ]
 }
 ```
