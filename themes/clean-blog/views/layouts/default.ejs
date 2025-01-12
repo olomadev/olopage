@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="" />
+  <meta name="keywords" content="<%= keywords %>" />
+  <meta name="description" content="<%= description %>" />
   <meta name="author" content="" />
+  <meta name="generator" content="Olopage" />
   <title><%= title %></title>
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
   <link rel="stylesheet" href="<%= themePath %>/assets/css/styles.css">        
@@ -17,7 +19,7 @@
     <%- body %>
   </main>
 
-  <%- include('partials/footer') %> <!-- Footer Partial -->
+  <%- include('partials/footer') %>
 
   <!-- Bootstrap core JS-->
   <script src="<%= themePath %>/assets/js/bootstrap.bundle.min.js"></script>

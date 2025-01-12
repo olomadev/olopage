@@ -42,6 +42,7 @@
     "@vuelidate/validators": "^2.0.0",
     "axios": "^1.3.4",
     "clipboard-copy": "^4.0.1",
+    "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
     "event-source-polyfill": "^1.0.31",
     "express": "^4.21.2",

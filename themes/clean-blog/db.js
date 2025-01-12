@@ -8,7 +8,7 @@ const sequelize = new Sequelize({
   username: 'admin',  // Database username
   password: 'Mbry8992@',      // Database password
   database: 'olopage',  // Database name
-  logging: false,  // SQL sorgularının loglanmasını engeller
+  logging: false,  // Prevents logging of SQL queries
 });
 
 export { sequelize }; // Export sequelize instance
