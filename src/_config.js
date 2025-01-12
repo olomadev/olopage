@@ -27,7 +27,7 @@ export default {
   i18n: {
     dateFormat: "shortFormat",
     en: {
-      dateFormat: "Y-m-d", // YYYY.mm.dd, YYYY\mm\dd or YYYY/mm/dd
+      dateFormat: "Y-m-d", // Y.m.d, Y\m\d or Y/m/d
       dateTimeFormat: "Y-m-d H:i:s",
     },
     tr: {

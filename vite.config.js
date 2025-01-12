@@ -2,6 +2,7 @@
 import vue from '@vitejs/plugin-vue'
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
+import { ViteEjsPlugin } from 'vite-plugin-ejs';
 // import eslintPlugin from 'vite-plugin-eslint'
 
 // Utilities
@@ -29,6 +30,11 @@ export default defineConfig({
     }
   },
   plugins: [
+    ViteEjsPlugin(() => {
+      return {
+        // variables
+      };
+    }),
     // eslintPlugin(),
     vue({ 
       template: { 

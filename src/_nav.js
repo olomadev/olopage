@@ -12,9 +12,14 @@ export default  {
       //   link: "/dashboard",
       // },
       {
-        icon: "mdi-note-edit-outline",
+        icon: "mdi-post-outline",
         text: t("menu.posts"),
         link: "/posts",
+      },
+      {
+        icon: "mdi-note-edit-outline",
+        text: t("menu.pages"),
+        link: "/pages",
       },
       {
         icon: "mdi-file-tree-outline",

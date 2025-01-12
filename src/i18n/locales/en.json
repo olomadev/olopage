@@ -8,6 +8,7 @@
     "home": "Home",
     "login": "Login",
     "posts": "Posts",
+    "pages": "Pages",
     "users": "Users",
     "roles": "Roles",
     "account": "My Account",
@@ -92,6 +93,7 @@
   "menu": {
     "home": "Home",
     "posts": "Posts",
+    "pages": "Pages",
     "categories": "Categories",
     "users": "Users",
     "authorization": "Authorization",
@@ -117,6 +119,7 @@
     "new record": "New Record",
     "roles": "Roles",
     "posts": "Posts",
+    "pages": "Pages",
     "users": "Users",
     "permissions": "Permissions",
     "categories": "Categories",

@@ -271,7 +271,7 @@
       </div>
 
       <div
-        v-if="editor && currentBlockTool?.tools?.length > 1 && editor.can().deleteNode(topLevelNodeType) && !dragging"
+        v-if="emptyCursor && editor && currentBlockTool && currentBlockTool?.name == 'paragraph' && editor.can().deleteNode(topLevelNodeType) && !dragging"
         class="p-1 gap-0.5 md:p-2 md:gap-1 flex group flex-row items-center relative"
       >
         <menu-item align="right" :coords="menuCoords">
@@ -332,7 +332,21 @@
           </template>
         </menu-item>
       </div>
-      
+
+      <div
+        v-if="editor && topLevelNodeType == 'horizontalRule' && editor.can().deleteRange(editor.state.selection) && !dragging"
+        class="p-1 gap-0.5 md:p-2 md:gap-1 flex group flex-row items-center relative"
+      >
+        <menu-item align="right">
+          <menu-button
+            ref="deleteButton"
+            :content="deleteIcon"
+            label="Delete"
+            @click.prevent="deleteRange(editor.state.selection)"
+          ></menu-button>
+        </menu-item>
+      </div>
+
       <div
         v-if="editor && editor.can().deleteNode(topLevelNodeType) && !dragging"
         class="p-1 gap-0.5 md:p-2 md:gap-1 flex group flex-row items-center relative"
@@ -356,6 +370,7 @@
       :editor="editor"
     />
     <input type="file" id="file-upload-input" ref="fileInput" @change="onFileChange" accept="image/png,image/jpg,image/jpeg,image/gif,image/webp" hidden  />
+
   </div>
 </template>
 
@@ -398,7 +413,6 @@ import { mergeArrays } from "./utils/utils";
 import BlockWidth from "./extensions/block-width";
 // import { Youtube } from "extensions/youtube";
 import { TrailingNode } from "./extensions/trailing-node";
-import { InsertBetween } from "./extensions/insert-between";
 import Variants from "./extensions/variants";
 import Commands from "./commands";
 import suggestion from "./suggestion";
@@ -478,8 +492,10 @@ export default {
     return {
       fileInput: null,
       dragging: false,
+      newElement: false,
       draggedNodePosition: null,
       editor: null,
+      emptyCursor: null,
       menuCoords: null,
       allBlockTools: mergeArrays(defaultBlockTools(), this.blockTools),
       allInlineTools: mergeArrays(defaultInlineTools(), this.inlineTools),
@@ -543,7 +559,6 @@ export default {
           // languageClassPrefix: 'language-',
         }),
         TrailingNode,
-        InsertBetween,
         Subscript,
         Superscript,
         Highlight,
@@ -609,7 +624,16 @@ export default {
       },
       onSelectionUpdate: () => {
         this.updateToolbar();
-        // this.nodeTree = GetNodeTree(this.editor.view);
+        const selection = this.editor.state.selection;
+        if (selection.empty) {
+          const pos = selection.$anchor.pos;
+          const nodeAtPos = this.editor.state.doc.nodeAt(pos);
+          if (!nodeAtPos || nodeAtPos.textContent.trim() === '') {
+            this.emptyCursor = true;
+          } else {
+            this.emptyCursor = false;
+          }
+        }
       },
     });
     //
@@ -767,6 +791,9 @@ export default {
           tool.name == this.topLevelNodeType ||
           tool.tools?.find((tool) => tool.name == this.topLevelNodeType)
       );
+    },
+    deleteRange(selection) {
+      this.editor.chain().focus().deleteRange(selection).run();
     },
     async deleteNode(node) {
       const oldFigures = []

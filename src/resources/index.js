@@ -24,6 +24,14 @@ export default [
     actions: ["create", "list", "edit", "delete", "show"],
   },
   {
+    name: "pages",
+    label: "name",
+    permissions: [
+      { name: "admin", actions: ["create","list","edit", "delete", "show"] },
+    ],
+    actions: ["create", "list", "edit", "delete", "show"],
+  },
+  {
     name: "permissions",
     label: "name",
     permissions: [

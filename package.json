@@ -1,11 +1,14 @@
 {
   "name": "olopage",
   "private": true,
+  "type": "module",
   "scripts": {
+    "server": "node server.js",
     "dev": "VITE_CJS_IGNORE_WARNING=true vite --host --mode dev",
     "build": "VITE_CJS_IGNORE_WARNING=true vite build --mode prod",
     "preview": "VITE_CJS_IGNORE_WARNING=true vite preview",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
+    "tailwind:css": "postcss public/styles/tailwind.css -o public/styles/style.css"
   },
   "files": [
     "dist",
@@ -39,7 +42,9 @@
     "@vuelidate/validators": "^2.0.0",
     "axios": "^1.3.4",
     "clipboard-copy": "^4.0.1",
+    "ejs": "^3.1.10",
     "event-source-polyfill": "^1.0.31",
+    "express": "^4.21.2",
     "js-cookie": "^3.0.5",
     "lodash": "4.17.21",
     "maska": "^3.0.4",
@@ -47,8 +52,11 @@
     "pinia": "^2.1.7",
     "portal-vue": "^3.0.0",
     "roboto-fontface": "*",
+    "sequelize": "^6.37.5",
     "slugify": "^1.6.6",
     "tiny-emitter": "^2.1.0",
+    "vite-express": "^0.20.0",
+    "vite-plugin-ejs": "^1.7.0",
     "vue": "^3.5.13",
     "vue-advanced-cropper": "^2.8.8",
     "vue-currency-input": "^3.0.3",
@@ -67,7 +75,9 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-prettier-vue": "^4.2.0",
     "eslint-plugin-vue": "^9.3.0",
+    "flowbite-typography": "^1.0.5",
     "postcss": "^8.4.17",
+    "postcss-cli": "^8.1.0",
     "sass": "^1.55.0",
     "tailwindcss": "^3.1.8",
     "vite": "^5.0.0",

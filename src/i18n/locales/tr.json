@@ -8,6 +8,7 @@
     "home": "Anasayfa",
     "login": "Giriş",
     "posts": "Yazılar",
+    "pages": "Sayfalar",
     "users": "Kullanıcılar",
     "roles": "Roller",
     "account": "Hesabım",
@@ -94,6 +95,7 @@
   "menu": {
     "home": "Anasayfa",
     "posts": "Yazılar",
+    "pages": "Pages",
     "categories": "Kategoriler",
     "roles": "Roller",
     "users": "Kullanıcılar",
@@ -119,6 +121,7 @@
     "new record": "Yeni Kayıt",
     "roles": "Roller",
     "posts": "Yazılar",
+    "pages": "Sayfalar",
     "users": "Kullanıcılar",
     "permissions": "Yetkiler",
     "categories": "Kategoriler",
