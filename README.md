@@ -5,10 +5,6 @@ Amazing fast, simple and flexible blog application for Node.js developers.
 
 ## Tech Stack
 
-* Frontend: Node/Express.js (Themes)
-* Frontend-Dev: Vue.js
-* Backend: Php/Mezzio
-
 <table>
 	<tbody>
 		<tr>
@@ -24,7 +20,7 @@ Amazing fast, simple and flexible blog application for Node.js developers.
 			<td>Php/Mezzio (We used most popular and simple open source languages)</td>
 		</tr>
 		<tr>
-			<td>Database</td>
+			<td><b>Database</b></td>
 			<td>MySQL & Redis</td>
 		</tr>
 	</tbody>
