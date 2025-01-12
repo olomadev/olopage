@@ -19,13 +19,15 @@ themes/
         ├── contact.ejs
         ├── index.ejs
         └── post.ejs
-    ├── config.json
+    ├── config.js
     ├── db.js
     ├── README.md
     └── server.js
 ```
 
 ## Theme Configuration
+
+config.json
 
 ```
 {

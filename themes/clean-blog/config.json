@@ -3,8 +3,8 @@
   "version": "1.0",
   "pages": [
     { "path": "index" },
-    { "path": "about", "content": "" },
-    { "path": "post", "content": "" },
-    { "path": "contact", "content": "" }
+    { "path": "about", "defaultContent": "" },
+    { "path": "post", "defaultContent": "" },
+    { "path": "contact", "defaultContent": "" }
   ]
 }
