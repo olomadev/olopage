@@ -21,7 +21,7 @@ Amazing fast, simple and flexible blog application for Node.js developers.
 		</tr>
 		<tr>
 			<td><b>Database</b></td>
-			<td>MySQL & Redis</td>
+			<td>MySQL & Redis (We used MySQL for RMDBS and Redis for caching operations)</td>
 		</tr>
 	</tbody>
 </table>
