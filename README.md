@@ -77,10 +77,10 @@ config.json
   "name": "clean-blog",
   "version": "1.0",
   "pages": [
-    { "path": "about", "defaultContent": "" },
-    { "path": "contact", "defaultContent": "" },
+    { "path": "about" },
+    { "path": "contact" },
     { "path": "index" },
-    { "path": "post", "defaultContent": "" }
+    { "path": "post" }
   ]
 }
 ```

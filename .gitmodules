@@ -1,0 +1,4 @@
+[submodule "dev"]
+	path = dev
+	url = git@github.com:olomadev/olopage-dev.git
+	branch = 1.x

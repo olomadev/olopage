@@ -5,7 +5,7 @@
   "description": "Amazing fast, simple and flexible blog application for javascript developers.",
   "main": "vite.config.js",
   "scripts": {
-    "server": "node --trace-warnings --no-warnings core/server.js"
+    "server": "node --trace-warnings --no-warnings themes/clean-blog/server.js"
   },
   "repository": {
     "type": "git",

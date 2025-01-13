@@ -1,7 +1,9 @@
 import express from "express";
 import expressLayouts from 'express-ejs-layouts';
 import ViteExpress from "vite-express";
-import config from '../../jsconfig.json' assert { type: 'json' };
+
+import config from '../../config.json' assert { type: 'json' };
+
 import { sequelize } from './db.js'; // Import sequelize instance
 import { Posts } from './models/post.js';  // Import Post model
 import { Users } from './models/users.js';  // Import User model
