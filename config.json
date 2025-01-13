@@ -1,3 +1,5 @@
 {
-  "theme": "clean-blog"
+  "port": 3000,
+  "theme": "clean-blog",
+  "path": "themes/clean-blog",
 }

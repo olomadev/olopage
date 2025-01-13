@@ -1,10 +1,13 @@
 {
   "name": "clean-blog",
   "version": "1.0",
+  "author": "Oloma",
+  "keywords": "default, clean-blog, clean, simple, blog, cms",
+  "description": "",
   "pages": [
     { "path": "index" },
-    { "path": "about", "defaultContent": "" },
-    { "path": "post", "defaultContent": "" },
-    { "path": "contact", "defaultContent": "" }
+    { "path": "about" },
+    { "path": "post" },
+    { "path": "contact" }
   ]
 }
