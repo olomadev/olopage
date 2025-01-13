@@ -1,0 +1,37 @@
+{
+  "name": "olopage",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Amazing fast, simple and flexible blog application for javascript developers.",
+  "main": "vite.config.js",
+  "scripts": {
+    "server": "node --trace-warnings --no-warnings core/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olomadev/olopage.git"
+  },
+  "keywords": [
+    "blog",
+    "olopage",
+    "cms",
+    "node.js"
+  ],
+  "author": "oloma.dev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/olomadev/olopage/issues"
+  },
+  "homepage": "https://github.com/olomadev/olopage#readme",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-ejs-layouts": "^2.5.1",
+    "ioredis": "^5.4.2",
+    "mysql2": "^3.12.0",
+    "sequelize": "^6.37.5",
+    "vite-express": "^0.20.0",
+    "vite-plugin-ejs": "^1.7.0"
+  }
+}
