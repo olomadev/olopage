@@ -11,9 +11,6 @@ themes/
         ├── img
         ├── js
         └── favicon.ico
-    └── models/
-        ├── posts.js
-        └── users.js
     └── views/
         └── layouts/
             ├── partials/
@@ -26,8 +23,8 @@ themes/
         ├── index.ejs
         └── post.ejs
     ├── cache.js
-    ├── config.js
-    ├── db.js
+    ├── config.json
+    ├── knex.js
     ├── README.md
     ├── redis.js
     └── server.js
@@ -41,11 +38,14 @@ config.json
 {
   "name": "clean-blog",
   "version": "1.0",
+  "author": "Oloma",
+  "keywords": "default, clean-blog, clean, simple, blog, cms",
+  "description": "",
   "pages": [
-    { "path": "about", "defaultContent": "" },
-    { "path": "contact", "defaultContent": "" },
     { "path": "index" },
-    { "path": "post", "defaultContent": "" }
+    { "path": "about" },
+    { "path": "post" },
+    { "path": "contact" }
   ]
 }
 ```
@@ -58,6 +58,8 @@ jsconfig.json
 
 ```
 {
+  "port": 3000,
   "theme": "clean-blog",
+  "path": "themes/clean-blog"
 }
 ```

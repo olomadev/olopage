@@ -1,41 +1,67 @@
-/**
- * Clean-blog default theme v1.0 - 2025
- */
-import expressLayouts from "express-ejs-layouts";
-import { Posts } from "./models/posts.js";
-import { Users } from "./models/users.js";
-import { cacheQueryResults } from './cache.js'; // Import the cache helper
-
-Posts.belongsTo(Users, { foreignKey: 'authorId' });
-Users.hasMany(Posts, { foreignKey: 'authorId' });
+import knex from './knex.js'; // db
+import { cacheQueryResults } from './cache.js';
 
 export default function themeServer(app, config) {
-  //
-  // set default layout
-  //
-  app.set('layout', 'layouts/default');
-
-  // app.use(expressLayouts);
-  // app.use("/themes", express.static("assets"));
-
+  app.set('layout', 'layouts/default'); // Varsayılan layout ayarla
   app.get("/", async (req, res) => {
-    const posts = await cacheQueryResults("olopage:posts-all", async () => {
-      return await Posts.findAll({
-        include: [{
-          model: Users,
-          required: true,  // This will perform an INNER JOIN to fetch associated users
-          attributes: ['userId', 'email', 'firstname', 'lastname'],  // Fetch specific user fields
-        }],
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 3;
+    const offset = (page - 1) * limit;
+
+    try {
+      const posts = await cacheQueryResults(`olopage:posts-page-${page}`, async () => {
+        return await knex('posts')
+          .select(['posts.title', 'posts.permalink','posts.description','posts.publishedAt','users.firstname','files.fileName'])
+          .leftJoin('users', 'posts.authorId', 'users.userId')
+          .leftJoin('files', function() {
+            this.on('posts.featuredImageId', '=', 'files.fileId')
+              .andOn('files.fileTag', '=', knex.raw('?', ['thumb']))
+              .andOn('files.fileDimension', '=', knex.raw('?', ['160x110']));
+          })
+          .orderBy('posts.createdAt', 'desc')
+          .limit(limit)
+          .offset(offset);
       });
-    });
-    // Render the data to the view
-    res.render('index', {
-      title: 'Welcome !',
-      keywords: '',
-      description: '',
-      themePath: config.path,
-      posts: posts,  // Pass the fetched or cached posts to the view
-    });
+      const totalPosts = await knex('posts').count({ count: '*' }).first();
+
+      res.render('index', {
+        title: 'Welcome Clean Blog Theme !',
+        keywords: '',
+        description: '',
+        themePath: config.path,
+        posts: posts,
+        currentPage: page,
+        apiUrl: process.env.API_URL,
+        totalPages: Math.ceil(totalPosts.count / limit)
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('An error occurred while fetching the posts.');
+    }
+  });
+
+  app.get("/:slug", async (req, res) => {
+    const slug = req.params.slug;
+    try {
+      const post = await knex('posts')
+        .select('title', 'description', 'contentHtml', 'createdAt')
+        .where({ permalink: slug })
+        .first();
+
+      if (!post) {
+        return res.status(404).render("404");
+      }
+      res.render('post', {
+        title: post.title || '',
+        keywords: post.keywords || '',
+        description: post.description || '',
+        themePath: config.path,
+        post: post
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('An error occurred while fetching the post.');
+    }
   });
 
   app.get("/about", async (req, res) => {
@@ -45,17 +71,4 @@ export default function themeServer(app, config) {
   app.get("/contact", async (req, res) => {
     res.render('contact', { themePath: config.path });
   });
-
-  app.get("/:slug", async (req, res) => {
-    const slug = req.params.slug;
-    const post = await Posts.findOne({ where: { slug: slug } });
-    if (!post) {
-      return res.status(404).render("404");
-    }
-    res.render('post', {
-      themePath: config.path,
-      post,
-    });
-  });
-
 }

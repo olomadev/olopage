@@ -1,37 +1,51 @@
 
 <!-- Main Content-->
 <div class="container px-4 px-lg-5">
-    <div class="row gx-4 gx-lg-5 justify-content-center">
-        <div class="col-md-10 col-lg-8 col-xl-7">
-            <!-- Post preview-->
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-9 col-sm-12">
+
+          <%
+          posts.forEach(post => {
+            const date = new Date(post.publishedAt);
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = date.toLocaleDateString('en-US', options);
+          %>
             <div class="post-preview">
-                <a href="/post">
-                    <h2 class="display-8">Man must explore, and this is exploration at its greatest</h2>
-                    <h3 class="display-9">Problems look mighty small from 150 miles up</h3>
-                </a>
-                <p class="display-11">
-                    Posted by
-                    <a href="#!">Start Bootstrap</a>
-                    on September 24, 2023
-                </p>
+              <div class="row align-items-center click-hover-effect pt-2 pb-2 clickable-row" data-href="/<%= post.permalink %>">
+                <div class="col-9 col-sm-10 px-4">
+                  <h2 class="display-8 pt-3"><%= post.title %></h2>
+                  <h3 class="display-10 text-muted">
+                    <%= post.description.length > 100 ? post.description.substring(0, 100) + '...' : post.description %>
+                  </h3>
+                  <p class="text-muted small">
+                    Posted by <a href="#!"><%= post.firstname %></a> on <%= formattedDate %>
+                  </p>
+                </div>
+                <div class="col-3 col-sm-2">
+                  <% if (post.fileName) { %>
+                    <img src="<%= apiUrl %>/api/files/display?fileName=<%= post.fileName %>" class="img-fluid rounded-end" alt="Post Thumbnail" />
+                  <% } else { %>
+                    <img src="<%= themePath %>/assets/img/no-image.jpg" class="img-fluid rounded-end" alt="No Image Thumbnail" />
+                  <% } %>
+                </div>
+              </div>
             </div>
             <!-- Divider-->
-            <hr class="my-4" />
-            <!-- Post preview-->
-            <div class="post-preview">
-                <a href="/post">
-                <h2 class="display-8">I believe every human has a finite number of heartbeats.</h2></a>
-                <h3 class="display-9">Problems look mighty small from 150 miles up</h3>
-                <p class="display-11">
-                    Posted by
-                    <a href="#!">Start Bootstrap</a>
-                    on September 18, 2023
-                </p>
-            </div>
-            <!-- Divider-->
-            <hr class="my-4" />
-            <!-- Pager-->
-            <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>
+            <hr style="border: 1px solid #d7d7d7;" />
+          <% }) %>
+
+          <!-- Pager-->
+          <nav class="d-flex justify-content-center mb-4">
+            <ul class="pagination">
+              <% for (let i = 1; i <= totalPages; i++) { %>
+                <li class="<%= currentPage === i ? 'active' : '' %> me-2">
+                  <a href="?page=<%= i %>" class="btn btn-outline-primary"><%= i %></a>
+                </li>
+              <% } %>
+            </ul>
+          </nav>    
+            
         </div>
     </div>
 </div>
+

@@ -46,9 +46,6 @@ themes/
         ├── img
         ├── js
         └── favicon.ico
-    └── models/
-        ├── posts.js
-        └── users.js
     └── views/
         └── layouts/
             ├── partials/
@@ -61,14 +58,14 @@ themes/
         ├── index.ejs
         └── post.ejs
     ├── cache.js
-    ├── config.js
-    ├── db.js
+    ├── config.json
+    ├── knex.js
     ├── README.md
     ├── redis.js
     └── server.js
 ```
 
-### Theme Configuration
+## Theme Configuration
 
 config.json
 
@@ -76,16 +73,19 @@ config.json
 {
   "name": "clean-blog",
   "version": "1.0",
+  "author": "Oloma",
+  "keywords": "default, clean-blog, clean, simple, blog, cms",
+  "description": "",
   "pages": [
-    { "path": "about" },
-    { "path": "contact" },
     { "path": "index" },
-    { "path": "post" }
+    { "path": "about" },
+    { "path": "post" },
+    { "path": "contact" }
   ]
 }
 ```
 
-### Changing Theme
+## Changing Theme
 
 You can change the default theme from jsconfig.json in the project root.
 
@@ -93,6 +93,8 @@ jsconfig.json
 
 ```
 {
+  "port": 3000,
   "theme": "clean-blog",
+  "path": "themes/clean-blog"
 }
 ```

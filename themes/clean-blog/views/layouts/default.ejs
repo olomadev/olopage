@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="keywords" content="<%= keywords %>" />
   <meta name="description" content="<%= description %>" />
-  <meta name="author" content="" />
-  <meta name="generator" content="Olopage" />
+  <meta name="generator" content="Olopage v1.0" />
   <title><%= title %></title>
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
   <link rel="stylesheet" href="<%= themePath %>/assets/css/styles.css">        
@@ -25,5 +24,14 @@
   <script src="<%= themePath %>/assets/js/bootstrap.bundle.min.js"></script>
   <!-- Core theme JS-->
   <script src="<%= themePath %>/assets/js/scripts.js"></script>
+  <script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+      document.querySelectorAll(".clickable-row").forEach(function(row) {
+        row.addEventListener("click", function() {
+          window.location.href = row.getAttribute("data-href");
+        });
+      });
+    });
+  </script>
 </body>
 </html>

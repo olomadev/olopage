@@ -5,8 +5,19 @@
   font-size: 1.25rem;
   font-weight: 300;
 }
-.post-meta {
-
+.post-preview h3 {
+  line-height: 1.4rem;
+}
+.pagination {
+  margin-top: 50px;
+}
+.click-hover-effect {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  background-color: white;
+}
+.click-hover-effect:hover {
+  background-color: #f5f5f5;
 }
 .display-1 {
   font-size: calc(1.625rem + 4.5vw);
