@@ -1,7 +1,4 @@
 // Plugins
-import vue from '@vitejs/plugin-vue'
-import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import { ViteEjsPlugin } from 'vite-plugin-ejs';
 // import eslintPlugin from 'vite-plugin-eslint'
 
@@ -14,7 +11,6 @@ import { resolve, dirname } from 'node:path'
 // https://vitejs.dev/guide/env-and-mode.html#env-files
 // 
 export default defineConfig({
-  transpileDependencies: ["vuetify"],
   server: {
     host: '0.0.0.0',
     port: 3000
@@ -34,24 +30,6 @@ export default defineConfig({
       return {
         // variables
       };
-    }),
-    // eslintPlugin(),
-    vue({ 
-      template: { 
-        transformAssetUrls,
-      }
-    }),
-    // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
-    vuetify({
-      autoImport: true,
-      styles: {
-        configFile: 'src/styles/settings.scss',
-      },
-    }),
-    // https://github.com/lokalise/lokalise-tutorials/blob/main/vue-3-i18n/vite.config.js
-    VueI18nPlugin({
-      runtimeOnly: false,
-      include: resolve(dirname(fileURLToPath(import.meta.url)), './src/i18n/locales/**'),
     }),
   ],
   define: { 
