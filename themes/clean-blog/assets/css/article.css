@@ -1,0 +1,52 @@
+/**
+ * Post detail page
+ */
+article p {
+ line-height: 1.6rem;
+}
+article h1 {
+	font-size: 2.2rem;
+	line-height: 2.5rem;
+	margin-bottom: 30px;
+}
+article h2 {
+	font-size: 1.7rem;
+	line-height: 2.5rem;
+}
+article h1 strong {
+  font-weight: 300;
+}
+article h2 strong {
+  font-weight: 300;
+}
+article figure {
+	text-align: center;
+	padding: 20px;
+}
+article figure figcaption {
+	font-size: 12px;
+	margin-top: 15px;
+	color: lightslategray;
+}
+.author-bar .avatar {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	overflow: hidden;
+	margin-right: 15px;
+}
+.author-bar .avatar img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.author-info .author-name {
+	font-size: 16px;
+}
+.author-info .author-job {
+	font-size: 14px;
+	color: #888;
+}
+#clapCount {
+	color: gray;
+}

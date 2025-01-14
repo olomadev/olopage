@@ -2,7 +2,7 @@ import knex from './knex.js'; // db
 import { cacheQueryResults } from './cache.js';
 
 export default function themeServer(app, config) {
-  app.set('layout', 'layouts/default'); // Varsayılan layout ayarla
+  app.set('layout', 'layouts/default'); // set default layout
   app.get("/", async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 3;
@@ -11,7 +11,7 @@ export default function themeServer(app, config) {
     try {
       const posts = await cacheQueryResults(`olopage:posts-page-${page}`, async () => {
         return await knex('posts')
-          .select(['posts.title', 'posts.permalink','posts.description','posts.publishedAt','users.firstname','files.fileName'])
+          .select(['posts.title', 'posts.permalink','posts.description','posts.publishedAt','users.userId','users.firstname','files.fileName'])
           .leftJoin('users', 'posts.authorId', 'users.userId')
           .leftJoin('files', function() {
             this.on('posts.featuredImageId', '=', 'files.fileId')
@@ -44,7 +44,7 @@ export default function themeServer(app, config) {
     const slug = req.params.slug;
     try {
       const post = await knex('posts')
-        .select('title', 'description', 'contentHtml', 'createdAt')
+        .select('title', 'authorId', 'description', 'contentHtml', 'createdAt')
         .where({ permalink: slug })
         .first();
 
@@ -52,11 +52,14 @@ export default function themeServer(app, config) {
         return res.status(404).render("404");
       }
       res.render('post', {
+        post,
         title: post.title || '',
         keywords: post.keywords || '',
         description: post.description || '',
         themePath: config.path,
-        post: post
+        pageCss: 'article.css',
+        apiUrl: process.env.API_URL,
+        contentHtml: post.contentHtml
       });
     } catch (error) {
       console.error(error);
