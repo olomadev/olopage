@@ -14,7 +14,7 @@
               <div class="row align-items-center click-hover-effect pt-2 pb-2 clickable-row" data-href="/<%= post.permalink %>">
                 
                 <div class="col-9 col-sm-10 px-4">
-                  <h2 class="display-8 pt-3"><%= post.title %></h2>
+                  <h2 class="display-8 pt-3"><a href="<%= post.permalink %>"><%= post.title %></a></h2>
                   <h3 class="display-10 text-muted">
                     <%= post.description.length > 100 ? post.description.substring(0, 100) + '...' : post.description %>
                   </h3>

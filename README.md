@@ -75,13 +75,7 @@ config.json
   "version": "1.0",
   "author": "Oloma",
   "keywords": "default, clean-blog, clean, simple, blog, cms",
-  "description": "",
-  "pages": [
-    { "path": "index" },
-    { "path": "about" },
-    { "path": "post" },
-    { "path": "contact" }
-  ]
+  "description": ""
 }
 ```
 

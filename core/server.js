@@ -1,5 +1,5 @@
 /**
- * Olopage core server.js - v1.0 - 2025
+ * Olopage core/server.js - v1.0 - 2025
  * 
  * Core server.js - do not touch this file it can be
  * change when update your application
