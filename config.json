@@ -1,5 +1,6 @@
 {
   "port": 3000,
   "theme": "clean-blog",
-  "path": "themes/clean-blog"
+  "path": "themes/clean-blog",
+  "screenshotApiKey": "mlNye8b8G3Tx7p7NLSpPxW718YpqHeNxnKYAzWBhAZbn5Etn8fgH5jWPpGxjaOht"
 }

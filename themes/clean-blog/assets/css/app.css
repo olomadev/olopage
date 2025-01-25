@@ -1,5 +1,11 @@
-.masthead {
-  margin-bottom: 100px;
+main {
+  /**
+   * In order for the Olopage screenshot feature to work properly, 
+   * it is recommended that there is a clear gap between 
+   * the top and bottom padding.
+   */
+  padding-top: 100px;
+  padding-bottom: 100px;
 }
 .lead {
   font-size: 1.25rem;
@@ -13,7 +19,6 @@
 }
 .click-hover-effect {
   cursor: pointer;
-  border-top: 2px solid #f1f4f8;
   border-bottom: 2px solid #f1f4f8;
   background-color: transparent;
 }

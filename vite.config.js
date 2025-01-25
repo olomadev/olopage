@@ -13,7 +13,8 @@ import { resolve, dirname } from 'node:path'
 export default defineConfig({
   server: {
     host: '0.0.0.0',
-    port: 3000
+    port: 3000,
+    allowedHosts: ['oloma.local', 'olopage.oloma.local'],
   },
   // fixes sass 2.0 deprecation bug
   // https://stackoverflow.com/questions/78997907/the-legacy-js-api-is-deprecated-and-will-be-removed-in-dart-sass-2-0-0

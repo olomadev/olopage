@@ -1,11 +1,11 @@
 
 # Olopage
 
-Amazing fast, simple and flexible blog application for Node.js developers.
+Amazing fast and flexible blog application for Node.js developers.
 
 ## Philosophy 🐧
 
-This application is an anti-page builder application and semi-automatic page content manager. Please hire a software developer to create better quality web pages. You don't need page builders, you need to hire developers. And we created this software for developers.
+A no-page builder blog application and simple content manager. This application developed for developers.
 
 <p align="center">
   <img src="goat.png" border="0" />

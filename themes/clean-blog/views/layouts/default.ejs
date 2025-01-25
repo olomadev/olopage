@@ -10,10 +10,10 @@
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@100;300;400;500;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<%= themePath %>/assets/css/styles.css?v=2">        
-  <link rel="stylesheet" href="<%= themePath %>/assets/css/app.css?v=14">
+  <link rel="stylesheet" href="<%= themePath %>/assets/css/app.css?v=22">
   <!-- Start dynamic css files  -->
 <% if (typeof pageCss !== 'undefined') { %>
-  <link rel="stylesheet" href="<%= themePath + '/assets/css/' + pageCss + '?' + new Date().getTime() %>">
+  <link rel="stylesheet" href="<%= themePath + '/assets/css/' + pageCss + '?v=12' %>">
 <% } %>
   <!-- End dynamic css files  -->
 </head>
