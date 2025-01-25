@@ -18,11 +18,12 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 import { Builder } from 'selenium-webdriver';
 import { Options } from 'selenium-webdriver/chrome.js';
-import sharp from 'sharp'; 
+import sharp from 'sharp';
+import fetch from 'node-fetch';
+import { v4 as uuidv4 } from 'uuid';
 
 // const themeConfigPath = `./themes/${config.theme}/config.json`;
 // const themeConfig = JSON.parse(fs.readFileSync(themeConfigPath, "utf8"));
-
 const app = express();
 app.use(cors());  // this will allow all incoming requests
 app.set('view engine', 'ejs');
@@ -41,7 +42,7 @@ import(themePath)
 // example: http://localhost:3000/screenshot?url=https://example.com&apiKey=VITE_SCREENSHOT_API_KEY
 // 
 app.get('/screenshot', async (req, res) => {
-  let { url, apiKey } = req.query;
+  let { url, id, type, apiKey } = req.query;
 
   // check API KEY
   if (!config.screenshotApiKey) {
@@ -53,6 +54,18 @@ app.get('/screenshot', async (req, res) => {
   // check URL
   if (!url) {
     return res.status(400).json({ error: 'Please enter a URL.' });
+  }
+  if (!id) {
+    return res.status(400).json({ error: 'Please enter a post or page ID.' });
+  }
+  // check Permalink
+  const permalink = getPermalink(url)
+  if (!permalink) {
+    return res.status(400).json({ error: 'Permalink is not valid.' });
+  }
+  // check URL is accessible ?
+  if (!(await isUrlAccessible(url))) {
+    return res.status(400).json({ error: 'URL is not accessible or invalid.' });
   }
   try {
     // set browser options
@@ -96,7 +109,7 @@ app.get('/screenshot', async (req, res) => {
         height: rect.height // height of the <main> element
       })
       .extend({
-          top: 180,    // add 150px top padding
+          top: 150,    // add 150px top padding
           bottom: 50, // add 50px bottom
           background: { r: 255, g: 255, b: 255 } // Padding alanını beyaz yap
         })
@@ -107,11 +120,20 @@ app.get('/screenshot', async (req, res) => {
       .resize(196, 270) // thumbnail dimensions
       .toBuffer();
 
-    const base64thumb = resizedImage.toString('base64')
+    // insert screenshot
+    const postId = (type == "post") ? id : null; // post screenshot
+    const pageId = (type == "page") ? id : null; // page screenshot
+    const imageType = 'image/webp';
+    const imageData = Buffer.from(resizedImage);
+
+    insertScreenshot(postId, pageId, imageType, imageData)
+      .then(() => {})
+      .catch((error) => {
+        console.error('Screenshot insert error:', error);
+      });
     //
-    // 
-    // burada base64thumb çıktısı base64 olarak veritabanına kayıt edilecek ...
-    // 
+    // delete redis cache file by page id / post id
+    deleteScreenshotCache(id);
 
     // send to browser
     res.setHeader('Content-Type', 'image/webp');
@@ -124,6 +146,76 @@ app.get('/screenshot', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while taking a screenshot.' });
   }
 });
+/**
+ * Insert screentshot to db
+ */
+const insertScreenshot = async (postId, pageId, imageType, imageData) => {
+  const themeName = config.theme;
+  const knexPath = `../themes/${themeName}/knex.js`;
+  const knex = (await import(knexPath)).default;
+  const trx = await knex.transaction();
+  const screenId = uuidv4();
+  try {
+    if (postId) {
+      await trx('screenshots').where({ postId }).del(); // first delete existing data based on postId  
+    }
+    if (pageId) {
+      await trx('screenshots').where({ pageId }).del(); 
+    }
+    await trx('screenshots').insert({
+      screenId,
+      postId,
+      pageId,
+      imageType,
+      imageData
+    });
+    await trx.commit();
+  } catch (error) {
+    await trx.rollback();
+    console.error('Transaction error:', error);
+  }
+};
+/**
+ * delete screenshot image cache
+ */
+const deleteScreenshotCache = async (id) => {
+  try {
+    let CACHE_ROOT_KEY = "olopage_app";
+    const themeName = config.theme;
+    const redisPath = `../themes/${themeName}/redis.js`;
+    const { default: redis } = await import(redisPath);
+    if (process.env.CACHE_ROOT_KEY) {
+        CACHE_ROOT_KEY = process.env.CACHE_ROOT_KEY.replace(/:$/, '')
+    }
+    const key = CACHE_ROOT_KEY + ':App\Model\ScreenshotModel:findOneById:' + id;
+    await redis.del(key);
+  } catch (error) {
+    console.error('Redis key deletion error:', error);
+  }
+};
+/**
+ * Check url is live
+ */
+const isUrlAccessible = async (url) => {
+  try {
+    const response = await fetch(url, { method: 'HEAD', timeout: 3000 });
+    return response.ok;
+  } catch {
+    return false;
+  }
+} 
+/**
+ * Get permalink part of url
+ */
+const getPermalink = (url) => {
+  try {
+    const parsedUrl = new URL(url); // take the path part and remove the "/"
+    const permalink = parsedUrl.pathname.replace(/^\/|\/$/g, ''); // remove the "/" at the beginning and end
+    return permalink;
+  } catch (error) {  
+    return null;
+  }
+};
 
 ViteExpress.listen(app, config.port, () =>
   console.log("Server is listening on port " + config.port + "..."),
