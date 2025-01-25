@@ -5,7 +5,7 @@ Amazing fast and flexible blog application for Node.js developers.
 
 ## Philosophy 🐧
 
-A no-page builder blog application and simple content manager. This application developed for developers.
+A no-page builder blog application and simple content manager developed for developers.
 
 <p align="center">
   <img src="goat.png" border="0" />
