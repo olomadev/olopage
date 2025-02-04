@@ -36,6 +36,7 @@ const themePath = `../themes/${config.theme}/server.js`;
 import(themePath)
   .then(({ default: themeServer }) => themeServer(app, config))
   .catch((err) => console.error("Theme could not be loaded:", err));
+//--------------------------------------------------------------------
 //
 // Screenshot API Endpoint v1.0
 // 
@@ -146,6 +147,7 @@ app.get('/screenshot', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while taking a screenshot.' });
   }
 });
+//--------------------------------------------------------------------
 /**
  * Insert screentshot to db
  */
@@ -175,6 +177,7 @@ const insertScreenshot = async (postId, pageId, imageType, imageData) => {
     console.error('Transaction error:', error);
   }
 };
+//--------------------------------------------------------------------
 /**
  * delete screenshot image cache
  */
@@ -193,6 +196,7 @@ const deleteScreenshotCache = async (id) => {
     console.error('Redis key deletion error:', error);
   }
 };
+//--------------------------------------------------------------------
 /**
  * Check url is live
  */
@@ -204,6 +208,7 @@ const isUrlAccessible = async (url) => {
     return false;
   }
 } 
+//--------------------------------------------------------------------
 /**
  * Get permalink part of url
  */
@@ -216,7 +221,10 @@ const getPermalink = (url) => {
     return null;
   }
 };
-
+//
+// listen server
+//--------------------------------------------------------------------
+//
 ViteExpress.listen(app, config.port, () =>
   console.log("Server is listening on port " + config.port + "..."),
 );
