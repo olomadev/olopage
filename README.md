@@ -1,7 +1,7 @@
 
 # Olopage
 
-Amazing fast and flexible blog application for Node.js developers.
+🚀 Amazing fast and flexible blog application for Node.js developers.
 
 ## Philosophy 🐧
 
