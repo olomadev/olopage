@@ -6,8 +6,11 @@ import redis from './redis.js'; // Import the Redis client
  * If not, query the database and store the result in Redis indefinitely.
  */
 export const cacheQueryResults = async (key, queryFn) => {
+  // app cache key
+  const cacheKey = process.env.CACHE_ROOT_KEY + key;
+
   // Attempt to get cached data from Redis
-  const cachedData = await redis.get(key);
+  const cachedData = await redis.get(cacheKey);
   
   if (cachedData) {
     console.log('Cache hit');  // If data is found in the cache
@@ -19,7 +22,7 @@ export const cacheQueryResults = async (key, queryFn) => {
   const result = await queryFn();
 
   // Cache the result in Redis indefinitely (without expiration time)
-  redis.set(key, JSON.stringify(result));  // Store result as a JSON string without expiration
+  redis.set(cacheKey, JSON.stringify(result));  // Store result as a JSON string without expiration
 
   return result;  // Return the fetched data
 };

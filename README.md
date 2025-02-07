@@ -46,6 +46,11 @@ themes/
         ├── img
         ├── js
         └── favicon.ico
+    ├── pages/
+    │   ├── home.js
+    │   ├── post.js
+    │   ├── about.js
+    │   ├── contact.js
     └── views/
         └── layouts/
             ├── partials/
@@ -64,6 +69,19 @@ themes/
     ├── redis.js
     └── server.js
 ```
+
+
+themes/
+└── clean-blog/
+
+    ├── assets/
+    ├── views/
+    ├── cache.js
+    ├── config.json
+    ├── knex.js
+    ├── redis.js
+    ├── server.js
+
 
 ## Theme Configuration
 

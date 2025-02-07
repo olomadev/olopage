@@ -26,6 +26,8 @@ import { v4 as uuidv4 } from 'uuid';
 // const themeConfig = JSON.parse(fs.readFileSync(themeConfigPath, "utf8"));
 const app = express();
 app.use(cors());  // this will allow all incoming requests
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, `../themes/${config.theme}/views`));
 app.use(expressLayouts);

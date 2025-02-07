@@ -1,0 +1,132 @@
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+<script>
+  <!-- Clap action -->
+  async function handleClap(postId) {
+    if (! postId) {
+      return
+    }
+    try {
+      const response = await fetch(`/clap/` + postId, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ postId }),
+      });
+      const data = await response.json();
+      alert(data.message);
+
+      if (data.success) {
+        const clapCountElem = document.getElementById("clapCount");
+        if (clapCountElem) {
+          clapCountElem.textContent = parseInt(clapCountElem.textContent) + 1;
+        }
+      }
+    } catch (error) {
+      console.error("Clap action failed:", error);
+      alert("An error has occurred. Please try again.");
+    }
+  }
+  <!-- Comment action -->
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("commentForm");
+
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        let isValid = true;
+
+        // name area
+        const nameInput = document.getElementById("name");
+        if (!nameInput.value.trim()) {
+            nameInput.classList.add("is-invalid");
+            isValid = false;
+        } else {
+            nameInput.classList.remove("is-invalid");
+            nameInput.classList.add("is-valid");
+        }
+
+        // comment area
+        const commentInput = document.getElementById("commentText");
+        if (!commentInput.value.trim()) {
+            commentInput.classList.add("is-invalid");
+            isValid = false;
+        } else {
+            commentInput.classList.remove("is-invalid");
+            commentInput.classList.add("is-valid");
+        }
+
+        // hCaptcha validation
+        const captchaInput = document.getElementById("captchaToken");
+        if (!captchaInput.value.trim()) {
+            captchaInput.classList.add("is-invalid");
+            isValid = false;
+        } else {
+            captchaInput.classList.remove("is-invalid");
+            captchaInput.classList.add("is-valid");
+        }
+        const hcaptchaResponse = document.querySelector('[name="h-captcha-response"]');
+        const name = nameInput.value.trim();
+        const commentText = commentInput.value.trim();
+        const captchaResponse = hcaptchaResponse.value.trim();
+        const commentSection = document.getElementById("commentSection");
+        const commentCard = document.getElementById("commentCard");
+
+        // if form is valid
+        if (isValid) {
+          const postId = document.getElementById('postId').value;
+          try {
+            const response = await fetch("/comment/" + postId, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ name, body: commentText, captcha: captchaResponse }),
+            });
+            const result = await response.json();
+            if (result.success) {
+              document.getElementById("commentForm").reset();
+              setTimeout(() => {
+                commentCard.style.display = "none"; // hide form
+                const successAlert = document.createElement("div"); // create success message
+                successAlert.className = "mt-5 alert alert-success";
+                successAlert.innerHTML = "Your comment has been submitted for approval and will be published here once approved.";
+                commentSection.appendChild(successAlert);
+              }, 500);
+            } else {
+              alert(result.message);
+            }
+          } catch (error) {
+            console.error(error);
+            alert("An error occurred while submitting the comment.");
+          }
+        }
+    });
+
+    // removing errors live
+    document.querySelectorAll("#name, #commentText").forEach((input) => {
+      input.addEventListener("input", function () {
+        if (input.value.trim()) {
+          input.classList.remove("is-invalid");
+          input.classList.add("is-valid");
+        } else {
+          input.classList.remove("is-valid");
+          input.classList.add("is-invalid");
+        }
+      });
+    });
+    
+  });
+
+  // this function works if hCaptcha is verified
+  function onCaptchaSuccess(token) {
+    // console.log("hCaptcha solved successfully! Token:", token);
+
+    // write the token to hidden input
+    const captchaInput = document.getElementById("captchaToken");
+    captchaInput.value = token;
+
+    // apply bootstrap validation classes
+    captchaInput.classList.remove("is-invalid");
+    captchaInput.classList.add("is-valid");
+  }
+</script>
