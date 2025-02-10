@@ -1,4 +1,9 @@
 <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+<!-- SimpleMDE JS -->
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<!-- Marked.js (To convert Markdown codes to HTML) -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script>
   <!-- Clap action -->
   async function handleClap(postId) {
@@ -88,7 +93,7 @@
               setTimeout(() => {
                 commentCard.style.display = "none"; // hide form
                 const successAlert = document.createElement("div"); // create success message
-                successAlert.className = "mt-5 alert alert-success";
+                successAlert.className = "mt-2 alert alert-success";
                 successAlert.innerHTML = "Your comment has been submitted for approval and will be published here once approved.";
                 commentSection.appendChild(successAlert);
               }, 500);
@@ -129,4 +134,33 @@
     captchaInput.classList.remove("is-invalid");
     captchaInput.classList.add("is-valid");
   }
+
+  // simple mde editor
+  document.addEventListener("DOMContentLoaded", function () {
+    var simplemde = new SimpleMDE({ 
+      element: document.getElementById("commentText"),
+      spellChecker: false,
+      status: false, // disable status bar
+      toolbar: ["bold", "italic", "|", "quote", "code", "unordered-list", "ordered-list", "|", "preview", "guide"]
+    });
+
+    marked.setOptions({
+      gfm: true, // GitHub Flavored Markdown
+      breaks: true, // keep new lines
+      highlight: function (code, lang) {
+        const language = hljs.getLanguage(lang) ? lang : 'plaintext';
+        return hljs.highlight(code, { language }).value;
+      }
+    });
+
+    document.querySelectorAll(".comment-text").forEach(function (el) {
+      el.innerHTML = marked.parse(el.textContent); // Convert Markdown to HTML
+
+      // color code blocks
+      el.querySelectorAll("pre code").forEach((block) => {
+        hljs.highlightElement(block);
+      });
+    });
+
+  });
 </script>

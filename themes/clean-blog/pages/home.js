@@ -26,7 +26,7 @@ export default function home(app, config) {
         return await knex('posts').count({ count: '*' }).first();
       });
 
-      res.render('index', {
+      res.render('home', {
         title: 'Welcome Clean Blog Theme !',
         keywords: '',
         scripts: '',

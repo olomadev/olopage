@@ -159,9 +159,6 @@ main {
   padding-top: 4rem !important;
 }
 */
-.form-control::placeholder {
-  color: #d9d7d7;
-}
 .img {
   border:2px solid #fff;
   box-shadow: 10px 10px 5px #ccc;

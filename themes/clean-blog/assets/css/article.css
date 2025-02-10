@@ -50,3 +50,48 @@ article figure figcaption {
 #clapCount {
 	color: gray;
 }
+.comments .comment-text p {
+  font-size: 13px;
+}
+.comments .comment-text pre {
+  font-size: 12px;
+  background-color: #f4f4f4;
+  border-radius: 5px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.comments .comment-footer {
+  font-size: 12px;
+  color: #d9d7d7;
+}
+.comments .comment-text {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+.comments .comment-text strong {
+  font-weight: bold;
+}
+.comments .comment-text em {
+  font-style: italic;
+}
+.comments .comment-text blockquote {
+  background-color: #f8f9fa;
+  border-left: 5px solid gray;
+  padding: 5px 20px;
+  font-style: italic;
+  color: #555;
+}
+.comments .comment-text ul {
+  padding-left: 20px;
+}
+.comments .comment-text li {
+  font-size: 12px;
+  list-style-type: disc;
+  margin-bottom: 5px;
+}
+.comments .comment-text u {
+  text-decoration: underline;
+}
+.form-control::placeholder {
+  color: #d9d7d7;
+}

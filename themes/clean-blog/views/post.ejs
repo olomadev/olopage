@@ -1,3 +1,5 @@
+<% css = include('partials/post-css'); %>
+
 <!-- Post Content -->
 <article class="mb-4">
   <div class="container px-4 px-lg-5">
@@ -41,15 +43,20 @@
   <div class="container px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
-        <h3 class="mb-4">Comments (<%= comments.length %>)</h3>
+        <h4 class="mb-4">Comments</h4>
         <div id="commentsList">
-          <% comments.forEach(comment => { %>
+          <% 
+            comments.forEach(comment => {
+              const date = new Date(comment.createdAt);
+              const options = { year: 'numeric', month: 'long', day: 'numeric' };
+              const formattedDate = date.toLocaleDateString('en-US', options);
+          %>
             <div class="card mb-3">
               <div class="card-body">
-                <h6 class="card-subtitle mb-2 text-muted">
-                  <%= comment.name %> - <%= new Date(comment.createdAt).toLocaleDateString() %>
-                </h6>
-                <p class="card-text"><%= comment.body %></p>
+                <p class="card-text comment-text"><%= comment.body %></p>
+                <span class="comment-footer small fst-italic">
+                  <%= comment.name %> - <%= formattedDate %>
+                </span>
               </div>
             </div>
           <% }); %>
@@ -73,7 +80,7 @@
                 </div>
 
                 <!-- hCaptcha -->
-                <div class="mb-3">
+                <div class="mb-2">
                   <div class="h-captcha" 
                     data-sitekey="<%= hcaptchaSiteKey %>" 
                     data-callback="onCaptchaSuccess">
@@ -98,4 +105,3 @@
 </section>
 
 <% scripts = include('partials/post-scripts'); %>
-

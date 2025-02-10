@@ -40,9 +40,9 @@ export default function post(app, config) {
         return result?.totalClaps || 0
       });
 
-      const comments = await cacheQueryResults(`comments:${slug}`, async () => {
+      const comments = await cacheQueryResults(`comments:${post.postId}`, async () => {
         return await knex('postComments')
-          .select('name', 'email', 'body', 'createdAt')
+          .select('name', 'body', 'createdAt')
           .where({ postId: post?.postId, published: 1 });
       });
 
